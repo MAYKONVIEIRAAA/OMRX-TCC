@@ -8,7 +8,4 @@
 - Dentro da pasta clonada do projeto, em seu terminal, rode:
   ```npm install```
 
-- Configure as variaveis de ambiente de acordo com o seu ambiente, use como exemplo o `.env_example`
-
-
-
+;- Configure as variaveis de ambiente de acordo com o seu ambiente, use como exemplo o `.env_example`
