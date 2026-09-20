@@ -9,3 +9,21 @@
   ```npm install```
 
 - Configure as variaveis de ambiente de acordo com o seu ambiente, use como exemplo o `.env_example`
+
+## Front-end
+
+Para rodar as ferramentas do front-end, entre na pasta frontend e instale as dependências.
+
+```
+cd frontend
+npm install
+```
+
+Comandos disponíveis dentro da pasta frontend.
+
+```
+npm run lint
+npm run lint:fix
+npm run format
+npm run format:check
+```
