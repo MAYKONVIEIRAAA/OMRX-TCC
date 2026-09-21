@@ -9,3 +9,6 @@
   ```npm install```
 
 - Configure as variaveis de ambiente de acordo com o seu ambiente, use como exemplo o `.env_example`
+
+- Ao final para iniciar o servidor:
+  ```npm start```
