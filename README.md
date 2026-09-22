@@ -13,18 +13,6 @@
 
 ## Front-end
 
-Para rodar as ferramentas do front-end, entre na pasta frontend e instale as dependências.
+As dependências do front-end já são instaladas junto com o npm install na raiz do projeto, graças aos workspaces.
 
-```
-cd frontend
-npm install
-````
-
-Comandos disponíveis dentro da pasta frontend.
-
-````
-npm run lint         verifica erros e más práticas no código
-npm run lint:fix      corrige automaticamente o que for possível
-npm run format        formata o código seguindo as regras do .prettierrc
-npm run format:check  confere se o código já está formatado, sem alterar nada
-````
+Comandos disponíveis para o front-end, rodados a partir da raiz.
