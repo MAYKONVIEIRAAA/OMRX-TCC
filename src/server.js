@@ -1,12 +1,9 @@
 const express = require("express");
 const mysql = require("mysql2");
-const routes = require("../src/routes/user");
-
-const webRiskRoutes = require("../src/routes/webRisk");
+const routes = require("../src/routes/routes");
 
 const app = express();
 app.use(express.json());
-app.use(webRiskRoutes);
 app.use(routes);
 
 app.listen(3000, () => {
