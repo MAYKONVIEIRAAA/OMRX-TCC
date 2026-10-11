@@ -1,4 +1,5 @@
 const webRiskService = require("../services/webRisk");
+const ERROR_MESSAGES = require("../errorMessages"); 
 
 const ERROR_MESSAGES = {
   MISSING_API_KEY: "Servico de verificacao indisponivel no momento. Tente novamente mais tarde.",
