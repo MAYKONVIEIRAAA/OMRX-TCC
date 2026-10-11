@@ -11,7 +11,7 @@ function validateUrl(req, res, next) {
     new URL(url);
   } catch {
     return res.status(400).json({
-      error: "Esse link não é Válido"
+      error: "Esse link não é válido"
     });
   }
 
