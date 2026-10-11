@@ -1,17 +1,15 @@
-function validateUrl(req, res, next) {
-  const { url } = req.body;
+const webRiskService = require("../services/webRisk");
 
-  if (!url || typeof url !== "string") {
-    return res.status(400).json({ error: "O campo url é obrigatório" });
-  }
-
+async function check(req, res) {
   try {
-    new URL(url);
-  } catch {
-    return res.status(400).json({ error: "A URL fornecida possui um formato inválido. Verifique se incluiu o protocolo correto (ex: https://) e tente novamente." });
+    const resultado = await webRiskService.checkUrl(req.body.url);
+    return res.status(200).json(resultado);
+  } catch (err) {
+    if (err instanceof webRiskService.WebRiskError) {
+      return res.status(err.status || 502).json({ error: err.message, code: err.code });
+    }
+    return res.status(500).json({ error: "Erro inesperado ao verificar o Link" });
   }
-
-  next();
 }
 
-module.exports = { validateUrl };
+module.exports = { check };

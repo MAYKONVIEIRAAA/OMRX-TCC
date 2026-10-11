@@ -3,7 +3,7 @@ function validateUrl(req, res, next) {
 
   if (!url || typeof url !== "string") {
     return res.status(400).json({
-      error: "O campo URL é obrigatório."
+      error: "O campo link é obrigatório."
     });
   }
 
@@ -11,7 +11,7 @@ function validateUrl(req, res, next) {
     new URL(url);
   } catch {
     return res.status(400).json({
-      error: "A URL fornecida possui um formato inválido. Verifique se incluiu o protocolo correto (ex: https://) e tente novamente."
+      error: "Esse link não é Válido"
     });
   }
 
