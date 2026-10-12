@@ -1,9 +1,9 @@
 const {
   checkUrlWithProvider,
   WebRiskError,
-} = require("./urlCheckProvider");
+} = require("../providers/urlCheckProvider");
 
-const { executeWithRetry } = require("./retry");
+const { executeWithRetry } = require("../utils/retry");
 
 async function checkUrl(targetUrl) {
   const apiKey = process.env.IPQS_API_KEY;
