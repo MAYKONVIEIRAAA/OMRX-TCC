@@ -10,4 +10,8 @@ module.exports = {
     MAX_RETRIES: 2,
     INITIAL_DELAY_MS: 500,
   },
+  URL_CHECK_PROVIDER: {
+    BASE_URL: "https://www.ipqualityscore.com/api/json/url",
+    TIMEOUT_MS: 5000,
+  },
 };

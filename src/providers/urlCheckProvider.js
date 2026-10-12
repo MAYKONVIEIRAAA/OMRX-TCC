@@ -1,5 +1,4 @@
-const BASE_URL = "https://www.ipqualityscore.com/api/json/url";
-const TIMEOUT_MS = 5000;
+const { URL_CHECK_PROVIDER } = require("../config/config");
 
 class WebRiskError extends Error {
   constructor(message, { status, code, cause } = {}) {
@@ -15,13 +14,13 @@ class WebRiskError extends Error {
 }
 
 function buildApiUrl(targetUrl, apiKey) {
-  return `${BASE_URL}/${apiKey}/${encodeURIComponent(targetUrl)}`;
+  return `${URL_CHECK_PROVIDER.BASE_URL}/${apiKey}/${encodeURIComponent(targetUrl)}`;
 }
 
 async function checkUrlWithProvider(targetUrl, apiKey) {
   const apiUrl = buildApiUrl(targetUrl, apiKey);
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
+  const timeout = setTimeout(() => controller.abort(), URL_CHECK_PROVIDER.TIMEOUT_MS);
 
   try {
     const response = await fetch(apiUrl, {
