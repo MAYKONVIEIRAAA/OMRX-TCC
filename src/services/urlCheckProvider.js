@@ -1,4 +1,3 @@
-
 const BASE_URL = "https://www.ipqualityscore.com/api/json/url";
 const TIMEOUT_MS = 5000;
 
@@ -19,7 +18,7 @@ function buildApiUrl(targetUrl, apiKey) {
   return `${BASE_URL}/${apiKey}/${encodeURIComponent(targetUrl)}`;
 }
 
-async function checkUrlWithIpqs(targetUrl, apiKey) {
+async function checkUrlWithProvider(targetUrl, apiKey) {
   const apiUrl = buildApiUrl(targetUrl, apiKey);
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), TIMEOUT_MS);
@@ -64,6 +63,6 @@ async function checkUrlWithIpqs(targetUrl, apiKey) {
 }
 
 module.exports = {
-  checkUrlWithIpqs,
+  checkUrlWithProvider,
   WebRiskError,
 };

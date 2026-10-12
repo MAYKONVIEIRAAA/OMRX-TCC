@@ -1,8 +1,7 @@
-
 const {
-  checkUrlWithIpqs,
+  checkUrlWithProvider,
   WebRiskError,
-} = require("./ipqsService");
+} = require("./urlCheckProvider");
 
 const { executeWithRetry } = require("./retry");
 
@@ -27,7 +26,7 @@ async function checkUrl(targetUrl) {
   const normalizedUrl = targetUrl.trim();
 
   const result = await executeWithRetry(() =>
-    checkUrlWithIpqs(normalizedUrl, apiKey)
+    checkUrlWithProvider(normalizedUrl, apiKey)
   );
 
   return {
