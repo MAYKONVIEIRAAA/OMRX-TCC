@@ -1,5 +1,5 @@
 const webRiskService = require("../services/urlRiskService");
-const ERROR_MESSAGES = require("../config/errorMessages");
+const { ERROR_MESSAGES } = require("../config/config");
 
 async function check(req, res) {
   try {

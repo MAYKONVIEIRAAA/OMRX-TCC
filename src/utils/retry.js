@@ -1,4 +1,4 @@
-const { MAX_RETRIES, INITIAL_DELAY_MS } = require("../config/retry");
+const { RETRY } = require("../config/config");
 
 function isRetryable(error) {
   return (
@@ -18,13 +18,13 @@ async function executeWithRetry(operation) {
     try {
       return await operation();
     } catch (error) {
-      const retriesExhausted = attempt >= MAX_RETRIES;
+      const retriesExhausted = attempt >= RETRY.MAX_RETRIES;
 
       if (retriesExhausted || !isRetryable(error)) {
         throw error;
       }
 
-      await sleep(INITIAL_DELAY_MS * 2 ** attempt);
+      await sleep(RETRY.INITIAL_DELAY_MS * 2 ** attempt);
     }
   }
 }
