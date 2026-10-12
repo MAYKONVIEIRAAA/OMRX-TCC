@@ -11,7 +11,7 @@ module.exports = {
     INITIAL_DELAY_MS: 500,
   },
   URL_CHECK_PROVIDER: {
-    BASE_URL: "https://www.ipqualityscore.com/api/json/url",
-    TIMEOUT_MS: 5000,
+  BASE_URL: "https://safebrowsing.googleapis.com/v5alpha1/urls:search",
+  TIMEOUT_MS: 5000,
   },
 };

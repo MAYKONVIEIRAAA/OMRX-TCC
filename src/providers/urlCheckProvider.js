@@ -14,7 +14,10 @@ class WebRiskError extends Error {
 }
 
 function buildApiUrl(targetUrl, apiKey) {
-  return `${URL_CHECK_PROVIDER.BASE_URL}/${apiKey}/${encodeURIComponent(targetUrl)}`;
+  const params = new URLSearchParams();
+  params.append("urls", targetUrl);
+  params.append("key", apiKey);
+  return `${URL_CHECK_PROVIDER.BASE_URL}?${params.toString()}`;
 }
 
 async function checkUrlWithProvider(targetUrl, apiKey) {
@@ -29,9 +32,9 @@ async function checkUrlWithProvider(targetUrl, apiKey) {
 
     const body = await response.json().catch(() => ({}));
 
-    if (!response.ok || body.success === false) {
+    if (!response.ok) {
       throw new WebRiskError(
-        body.message || `Erro HTTP ${response.status}`,
+        body?.error?.message || `Erro HTTP ${response.status}`,
         {
           status: response.status,
           code: "API_ERROR",

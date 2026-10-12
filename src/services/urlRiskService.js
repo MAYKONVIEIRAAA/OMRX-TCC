@@ -1,19 +1,16 @@
-const {checkUrlWithProvider,WebRiskError,} = require("../providers/urlCheckProvider");
+const { checkUrlWithProvider, WebRiskError } = require("../providers/urlCheckProvider");
 const { executeWithRetry } = require("../utils/retry");
 
 async function checkUrl(targetUrl) {
-  const apiKey = process.env.IPQS_API_KEY;
+  const apiKey = process.env.SAFE_BROWSING_API_KEY;
 
   if (!apiKey) {
-    throw new WebRiskError("IPQS_API_KEY não configurada", {
+    throw new WebRiskError("SAFE_BROWSING_API_KEY não configurada", {
       code: "MISSING_API_KEY",
     });
   }
 
-  if (
-    typeof targetUrl !== "string" ||
-    !targetUrl.trim()
-  ) {
+  if (typeof targetUrl !== "string" || !targetUrl.trim()) {
     throw new WebRiskError("Informe uma URL válida", {
       code: "INVALID_URL",
     });
@@ -25,12 +22,12 @@ async function checkUrl(targetUrl) {
     checkUrlWithProvider(normalizedUrl, apiKey)
   );
 
+  const threats = result.threats || [];
+  const threatTypes = threats.flatMap((t) => t.threatTypes || []);
+
   return {
-    safe: !result.unsafe,
-    malware: result.malware,
-    phishing: result.phishing,
-    suspicious: result.suspicious,
-    riskScore: result.risk_score,
+    safe: threats.length === 0,
+    threatTypes,
   };
 }
 
