@@ -9,10 +9,6 @@ const app = express();
 app.use(express.json());
 app.use(routes);
 
-app.get("/", (req, res) => {
-  res.send("Hello world!");
-});
-
 const PORT = process.env.PORT || 3000;
 
 if (require.main === module) {
