@@ -1,6 +1,4 @@
-
-const MAX_RETRIES = 2;
-const INITIAL_DELAY_MS = 500;
+const { MAX_RETRIES, INITIAL_DELAY_MS } = require("../config/retry");
 
 function isRetryable(error) {
   return (
