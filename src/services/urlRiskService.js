@@ -1,8 +1,4 @@
-const {
-  checkUrlWithProvider,
-  WebRiskError,
-} = require("../providers/urlCheckProvider");
-
+const {checkUrlWithProvider,WebRiskError,} = require("../providers/urlCheckProvider");
 const { executeWithRetry } = require("../utils/retry");
 
 async function checkUrl(targetUrl) {
