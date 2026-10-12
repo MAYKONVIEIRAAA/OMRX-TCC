@@ -1,0 +1,67 @@
+const { URL_CHECK_PROVIDER } = require("../config/config");
+
+class WebRiskError extends Error {
+  constructor(message, { status, code, cause } = {}) {
+    super(message);
+    this.name = "WebRiskError";
+    this.status = status;
+    this.code = code;
+
+    if (cause) {
+      this.cause = cause;
+    }
+  }
+}
+
+function buildApiUrl(targetUrl, apiKey) {
+  return `${URL_CHECK_PROVIDER.BASE_URL}/${apiKey}/${encodeURIComponent(targetUrl)}`;
+}
+
+async function checkUrlWithProvider(targetUrl, apiKey) {
+  const apiUrl = buildApiUrl(targetUrl, apiKey);
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), URL_CHECK_PROVIDER.TIMEOUT_MS);
+
+  try {
+    const response = await fetch(apiUrl, {
+      signal: controller.signal,
+    });
+
+    const body = await response.json().catch(() => ({}));
+
+    if (!response.ok || body.success === false) {
+      throw new WebRiskError(
+        body.message || `Erro HTTP ${response.status}`,
+        {
+          status: response.status,
+          code: "API_ERROR",
+        }
+      );
+    }
+
+    return body;
+  } catch (err) {
+    if (err instanceof WebRiskError) {
+      throw err;
+    }
+
+    if (err.name === "AbortError") {
+      throw new WebRiskError("Tempo limite da API excedido", {
+        code: "TIMEOUT",
+        cause: err,
+      });
+    }
+
+    throw new WebRiskError("Falha de comunicação com a API", {
+      code: "NETWORK_ERROR",
+      cause: err,
+    });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+module.exports = {
+  checkUrlWithProvider,
+  WebRiskError,
+};
