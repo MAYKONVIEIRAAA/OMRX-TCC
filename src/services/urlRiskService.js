@@ -1,4 +1,8 @@
-const { checkUrlWithProvider, WebRiskError } = require("../providers/urlCheckProvider");
+const {
+  checkUrlWithProvider,
+  WebRiskError,
+} = require("../providers/urlCheckProvider");
+
 const { executeWithRetry } = require("../utils/retry");
 
 async function checkUrl(targetUrl) {
@@ -18,16 +22,28 @@ async function checkUrl(targetUrl) {
 
   const normalizedUrl = targetUrl.trim();
 
-  const result = await executeWithRetry(() =>
+  let apiResponse = await executeWithRetry(() =>
     checkUrlWithProvider(normalizedUrl, apiKey)
   );
 
-  const threats = result.threats || [];
-  const threatTypes = threats.flatMap((t) => t.threatTypes || []);
+  const threats = Array.isArray(apiResponse.threats)
+    ? apiResponse.threats
+    : [];
+
+  const threatTypes = [
+    ...new Set(
+      threats.flatMap((threat) =>
+        Array.isArray(threat.threatTypes) ? threat.threatTypes : []
+      )
+    ),
+  ];
 
   return {
+    url: normalizedUrl,
     safe: threats.length === 0,
     threatTypes,
+    threats,
+    apiResponse,
   };
 }
 

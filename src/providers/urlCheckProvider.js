@@ -13,28 +13,29 @@ class WebRiskError extends Error {
   }
 }
 
-function buildApiUrl(targetUrl, apiKey) {
-  const params = new URLSearchParams();
-  params.append("urls", targetUrl);
-  params.append("key", apiKey);
-  return `${URL_CHECK_PROVIDER.BASE_URL}?${params.toString()}`;
-}
-
 async function checkUrlWithProvider(targetUrl, apiKey) {
-  const apiUrl = buildApiUrl(targetUrl, apiKey);
+  const apiUrl = new URL(URL_CHECK_PROVIDER.BASE_URL);
+
+  apiUrl.searchParams.set("key", apiKey);
+  apiUrl.searchParams.append("urls", targetUrl);
+
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), URL_CHECK_PROVIDER.TIMEOUT_MS);
+  const timeout = setTimeout(
+    () => controller.abort(),
+    URL_CHECK_PROVIDER.TIMEOUT_MS
+  );
 
   try {
     const response = await fetch(apiUrl, {
+      method: "GET",
       signal: controller.signal,
     });
 
-    const body = await response.json().catch(() => ({}));
+    const result = await response.json().catch(() => ({}));
 
     if (!response.ok) {
       throw new WebRiskError(
-        body?.error?.message || `Erro HTTP ${response.status}`,
+        result?.error?.message || `Erro HTTP ${response.status}`,
         {
           status: response.status,
           code: "API_ERROR",
@@ -42,7 +43,7 @@ async function checkUrlWithProvider(targetUrl, apiKey) {
       );
     }
 
-    return body;
+    return result;
   } catch (err) {
     if (err instanceof WebRiskError) {
       throw err;
