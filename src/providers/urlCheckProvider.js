@@ -13,56 +13,106 @@ class WebRiskError extends Error {
   }
 }
 
-async function checkUrlWithProvider(targetUrl, apiKey) {
-  const apiUrl = new URL(URL_CHECK_PROVIDER.BASE_URL);
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
-  apiUrl.searchParams.set("key", apiKey);
-  apiUrl.searchParams.append("urls", targetUrl);
-
+async function fetchWithTimeout(url, options) {
   const controller = new AbortController();
-  const timeout = setTimeout(
-    () => controller.abort(),
-    URL_CHECK_PROVIDER.TIMEOUT_MS
-  );
+  const timeout = setTimeout(() => controller.abort(), URL_CHECK_PROVIDER.TIMEOUT_MS);
 
   try {
-    const response = await fetch(apiUrl, {
-      method: "GET",
-      signal: controller.signal,
+    return await fetch(url, { ...options, signal: controller.signal });
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
+async function submitScan(targetUrl, accountId, apiToken) {
+  const apiUrl = `${URL_CHECK_PROVIDER.BASE_URL}/accounts/${accountId}/urlscanner/v2/scan`;
+
+  let response;
+  try {
+    response = await fetchWithTimeout(apiUrl, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${apiToken}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ url: targetUrl, visibility: "Public" }),
     });
-
-    const result = await response.json().catch(() => ({}));
-
-    if (!response.ok) {
-      throw new WebRiskError(
-        result?.error?.message || `Erro HTTP ${response.status}`,
-        {
-          status: response.status,
-          code: "API_ERROR",
-        }
-      );
-    }
-
-    return result;
   } catch (err) {
-    if (err instanceof WebRiskError) {
-      throw err;
-    }
-
     if (err.name === "AbortError") {
-      throw new WebRiskError("Tempo limite da API excedido", {
+      throw new WebRiskError("Tempo limite ao enviar URL para escaneamento", {
         code: "TIMEOUT",
         cause: err,
       });
     }
-
     throw new WebRiskError("Falha de comunicação com a API", {
       code: "NETWORK_ERROR",
       cause: err,
     });
-  } finally {
-    clearTimeout(timeout);
   }
+
+  const body = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new WebRiskError(body?.errors?.[0]?.message || `Erro HTTP ${response.status}`, {
+      status: response.status,
+      code: "API_ERROR",
+    });
+  }
+
+  return body.uuid;
+}
+
+async function pollResult(uuid, accountId, apiToken) {
+  const apiUrl = `${URL_CHECK_PROVIDER.BASE_URL}/accounts/${accountId}/urlscanner/v2/result/${uuid}`;
+
+  for (let attempt = 0; attempt < URL_CHECK_PROVIDER.MAX_POLL_ATTEMPTS; attempt++) {
+    await sleep(URL_CHECK_PROVIDER.POLL_INTERVAL_MS);
+
+    let response;
+    try {
+      response = await fetchWithTimeout(apiUrl, {
+        headers: { Authorization: `Bearer ${apiToken}` },
+      });
+    } catch (err) {
+      if (err.name === "AbortError") {
+        throw new WebRiskError("Tempo limite ao consultar resultado do scan", {
+          code: "TIMEOUT",
+          cause: err,
+        });
+      }
+      throw new WebRiskError("Falha de comunicação com a API", {
+        code: "NETWORK_ERROR",
+        cause: err,
+      });
+    }
+
+    if (response.status === 404) {
+      continue;
+    }
+
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}));
+      throw new WebRiskError(body?.errors?.[0]?.message || `Erro HTTP ${response.status}`, {
+        status: response.status,
+        code: "API_ERROR",
+      });
+    }
+
+    return response.json();
+  }
+
+  throw new WebRiskError("O escaneamento demorou demais para concluir", {
+    code: "TIMEOUT",
+  });
+}
+
+async function checkUrlWithProvider(targetUrl, accountId, apiToken) {
+  const uuid = await submitScan(targetUrl, accountId, apiToken);
+  return pollResult(uuid, accountId, apiToken);
 }
 
 module.exports = {

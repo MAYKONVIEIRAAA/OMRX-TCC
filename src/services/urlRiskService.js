@@ -1,15 +1,11 @@
-const {
-  checkUrlWithProvider,
-  WebRiskError,
-} = require("../providers/urlCheckProvider");
-
-const { executeWithRetry } = require("../utils/retry");
+const { checkUrlWithProvider, WebRiskError } = require("../providers/urlCheckProvider");
 
 async function checkUrl(targetUrl) {
-  const apiKey = process.env.SAFE_BROWSING_API_KEY;
+  const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
+  const apiToken = process.env.CLOUDFLARE_API_TOKEN;
 
-  if (!apiKey) {
-    throw new WebRiskError("SAFE_BROWSING_API_KEY não configurada", {
+  if (!accountId || !apiToken) {
+    throw new WebRiskError("Credenciais da Cloudflare não configuradas", {
       code: "MISSING_API_KEY",
     });
   }
@@ -22,28 +18,13 @@ async function checkUrl(targetUrl) {
 
   const normalizedUrl = targetUrl.trim();
 
-  let apiResponse = await executeWithRetry(() =>
-    checkUrlWithProvider(normalizedUrl, apiKey)
-  );
+  const result = await checkUrlWithProvider(normalizedUrl, accountId, apiToken);
 
-  const threats = Array.isArray(apiResponse.threats)
-    ? apiResponse.threats
-    : [];
-
-  const threatTypes = [
-    ...new Set(
-      threats.flatMap((threat) =>
-        Array.isArray(threat.threatTypes) ? threat.threatTypes : []
-      )
-    ),
-  ];
+  const malicious = result?.verdicts?.overall?.malicious || false;
 
   return {
-    url: normalizedUrl,
-    safe: threats.length === 0,
-    threatTypes,
-    threats,
-    apiResponse,
+    safe: !malicious,
+    verdict: result?.verdicts?.overall || null,
   };
 }
 
