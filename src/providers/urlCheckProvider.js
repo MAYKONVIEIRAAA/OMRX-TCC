@@ -1,9 +1,9 @@
 const { URL_CHECK_PROVIDER } = require("../config/config");
 
-class WebRiskError extends Error {
+class UrlScanError extends Error {
   constructor(message, { status, code, cause } = {}) {
     super(message);
-    this.name = "WebRiskError";
+    this.name = "UrlScanError";
     this.status = status;
     this.code = code;
 
@@ -43,12 +43,12 @@ async function submitScan(targetUrl, accountId, apiToken) {
     });
   } catch (err) {
     if (err.name === "AbortError") {
-      throw new WebRiskError("Tempo limite ao enviar URL para escaneamento", {
+      throw new UrlScanError("Tempo limite ao enviar URL para escaneamento", {
         code: "TIMEOUT",
         cause: err,
       });
     }
-    throw new WebRiskError("Falha de comunicação com a API", {
+    throw new UrlScanError("Falha de comunicacao com a API", {
       code: "NETWORK_ERROR",
       cause: err,
     });
@@ -57,7 +57,7 @@ async function submitScan(targetUrl, accountId, apiToken) {
   const body = await response.json().catch(() => ({}));
 
   if (!response.ok) {
-    throw new WebRiskError(body?.errors?.[0]?.message || `Erro HTTP ${response.status}`, {
+    throw new UrlScanError(body?.errors?.[0]?.message || `Erro HTTP ${response.status}`, {
       status: response.status,
       code: "API_ERROR",
     });
@@ -79,12 +79,12 @@ async function pollResult(uuid, accountId, apiToken) {
       });
     } catch (err) {
       if (err.name === "AbortError") {
-        throw new WebRiskError("Tempo limite ao consultar resultado do scan", {
+        throw new UrlScanError("Tempo limite ao consultar resultado do scan", {
           code: "TIMEOUT",
           cause: err,
         });
       }
-      throw new WebRiskError("Falha de comunicação com a API", {
+      throw new UrlScanError("Falha de comunicacao com a API", {
         code: "NETWORK_ERROR",
         cause: err,
       });
@@ -96,7 +96,7 @@ async function pollResult(uuid, accountId, apiToken) {
 
     if (!response.ok) {
       const body = await response.json().catch(() => ({}));
-      throw new WebRiskError(body?.errors?.[0]?.message || `Erro HTTP ${response.status}`, {
+      throw new UrlScanError(body?.errors?.[0]?.message || `Erro HTTP ${response.status}`, {
         status: response.status,
         code: "API_ERROR",
       });
@@ -105,7 +105,7 @@ async function pollResult(uuid, accountId, apiToken) {
     return response.json();
   }
 
-  throw new WebRiskError("O escaneamento demorou demais para concluir", {
+  throw new UrlScanError("O escaneamento demorou demais para concluir", {
     code: "TIMEOUT",
   });
 }
@@ -117,5 +117,5 @@ async function checkUrlWithProvider(targetUrl, accountId, apiToken) {
 
 module.exports = {
   checkUrlWithProvider,
-  WebRiskError,
+  UrlScanError,
 };
