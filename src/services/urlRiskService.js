@@ -1,4 +1,4 @@
-const { checkUrlWithProvider, UrlScanError } = require("../providers/urlCheckProvider");
+const { submitScan, getScanResult, UrlScanError } = require("../providers/urlCheckProvider");
 
 function sumRequests(ipStats) {
   return (ipStats || []).reduce((total, ip) => total + (ip.requests || 0), 0);
@@ -32,22 +32,7 @@ function calculateRiskScore({ malicious, maliciousRequestCount, totalRequests, s
   return Math.round(Math.min(score, 100));
 }
 
-async function checkUrl(targetUrl) {
-  const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
-  const apiToken = process.env.CLOUDFLARE_API_TOKEN;
-
-  if (!accountId || !apiToken) {
-    throw new UrlScanError("Credenciais da Cloudflare nao configuradas", { code: "MISSING_API_KEY" });
-  }
-
-  if (typeof targetUrl !== "string" || !targetUrl.trim()) {
-    throw new UrlScanError("Informe uma URL valida", { code: "INVALID_URL" });
-  }
-
-  const normalizedUrl = targetUrl.trim();
-
-  const result = await checkUrlWithProvider(normalizedUrl, accountId, apiToken);
-
+function formatResult(result) {
   const overall = result?.verdicts?.overall || {};
   const page = result?.page || {};
   const task = result?.task || {};
@@ -110,7 +95,41 @@ async function checkUrl(targetUrl) {
   };
 }
 
+async function startCheck(targetUrl) {
+  const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
+  const apiToken = process.env.CLOUDFLARE_API_TOKEN;
+
+  if (!accountId || !apiToken) {
+    throw new UrlScanError("Credenciais da Cloudflare nao configuradas", { code: "MISSING_API_KEY" });
+  }
+
+  if (typeof targetUrl !== "string" || !targetUrl.trim()) {
+    throw new UrlScanError("Informe uma URL valida", { code: "INVALID_URL" });
+  }
+
+  const scanId = await submitScan(targetUrl.trim(), accountId, apiToken);
+  return { scanId };
+}
+
+async function getCheckResult(scanId) {
+  const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
+  const apiToken = process.env.CLOUDFLARE_API_TOKEN;
+
+  if (!accountId || !apiToken) {
+    throw new UrlScanError("Credenciais da Cloudflare nao configuradas", { code: "MISSING_API_KEY" });
+  }
+
+  const { pending, result } = await getScanResult(scanId, accountId, apiToken);
+
+  if (pending) {
+    return { status: "pending" };
+  }
+
+  return { status: "ready", ...formatResult(result) };
+}
+
 module.exports = {
-  checkUrl,
+  startCheck,
+  getCheckResult,
   UrlScanError,
 };

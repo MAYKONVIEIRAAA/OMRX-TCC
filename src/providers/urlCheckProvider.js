@@ -13,10 +13,6 @@ class UrlScanError extends Error {
   }
 }
 
-function sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 async function fetchWithTimeout(url, options) {
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), URL_CHECK_PROVIDER.TIMEOUT_MS);
@@ -66,56 +62,45 @@ async function submitScan(targetUrl, accountId, apiToken) {
   return body.uuid;
 }
 
-async function pollResult(uuid, accountId, apiToken) {
+async function getScanResult(uuid, accountId, apiToken) {
   const apiUrl = `${URL_CHECK_PROVIDER.BASE_URL}/accounts/${accountId}/urlscanner/v2/result/${uuid}`;
 
-  for (let attempt = 0; attempt < URL_CHECK_PROVIDER.MAX_POLL_ATTEMPTS; attempt++) {
-    await sleep(URL_CHECK_PROVIDER.POLL_INTERVAL_MS);
-
-    let response;
-    try {
-      response = await fetchWithTimeout(apiUrl, {
-        headers: { Authorization: `Bearer ${apiToken}` },
-      });
-    } catch (err) {
-      if (err.name === "AbortError") {
-        throw new UrlScanError("Tempo limite ao consultar resultado do scan", {
-          code: "TIMEOUT",
-          cause: err,
-        });
-      }
-      throw new UrlScanError("Falha de comunicacao com a API", {
-        code: "NETWORK_ERROR",
+  let response;
+  try {
+    response = await fetchWithTimeout(apiUrl, {
+      headers: { Authorization: `Bearer ${apiToken}` },
+    });
+  } catch (err) {
+    if (err.name === "AbortError") {
+      throw new UrlScanError("Tempo limite ao consultar resultado do scan", {
+        code: "TIMEOUT",
         cause: err,
       });
     }
-
-    if (response.status === 404) {
-      continue;
-    }
-
-    if (!response.ok) {
-      const body = await response.json().catch(() => ({}));
-      throw new UrlScanError(body?.errors?.[0]?.message || `Erro HTTP ${response.status}`, {
-        status: response.status,
-        code: "API_ERROR",
-      });
-    }
-
-    return response.json();
+    throw new UrlScanError("Falha de comunicacao com a API", {
+      code: "NETWORK_ERROR",
+      cause: err,
+    });
   }
 
-  throw new UrlScanError("O escaneamento demorou demais para concluir", {
-    code: "TIMEOUT",
-  });
-}
+  if (response.status === 404) {
+    return { pending: true };
+  }
 
-async function checkUrlWithProvider(targetUrl, accountId, apiToken) {
-  const uuid = await submitScan(targetUrl, accountId, apiToken);
-  return pollResult(uuid, accountId, apiToken);
+  if (!response.ok) {
+    const body = await response.json().catch(() => ({}));
+    throw new UrlScanError(body?.errors?.[0]?.message || `Erro HTTP ${response.status}`, {
+      status: response.status,
+      code: "API_ERROR",
+    });
+  }
+
+  const body = await response.json();
+  return { pending: false, result: body };
 }
 
 module.exports = {
-  checkUrlWithProvider,
+  submitScan,
+  getScanResult,
   UrlScanError,
 };
