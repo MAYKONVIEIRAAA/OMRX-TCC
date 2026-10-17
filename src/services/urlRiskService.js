@@ -4,6 +4,18 @@ function sumRequests(ipStats) {
   return (ipStats || []).reduce((total, ip) => total + (ip.requests || 0), 0);
 }
 
+function extractDomainCategories(domainCategoriesData) {
+  const names = new Set();
+  for (const entry of domainCategoriesData || []) {
+    const content = entry?.inherited?.content || [];
+    const risks = entry?.inherited?.risks || [];
+    for (const c of [...content, ...risks]) {
+      if (c?.name) names.add(c.name);
+    }
+  }
+  return Array.from(names);
+}
+
 function calculateRiskScore({ malicious, maliciousRequestCount, totalRequests, securePercentage }) {
   let score = malicious ? 60 : 0;
 
@@ -39,10 +51,10 @@ async function checkUrl(targetUrl) {
   const overall = result?.verdicts?.overall || {};
   const page = result?.page || {};
   const task = result?.task || {};
-  const stats = result?.data?.stats || {};
-  const ipStats = result?.data?.stats?.ipStats || [];
+  const stats = result?.stats || {};
+  const ipStats = stats.ipStats || [];
   const phishingData = result?.meta?.processors?.phishing?.data || [];
-  const domainCategories = result?.meta?.processors?.domainCategories?.data || [];
+  const domainCategoriesData = result?.meta?.processors?.domainCategories?.data || [];
   const radarRank = result?.meta?.processors?.radarRank?.data || [];
 
   const maliciousRequestCount = stats.malicious || 0;
@@ -66,7 +78,7 @@ async function checkUrl(targetUrl) {
     },
     domain: {
       name: page.domain || null,
-      categories: domainCategories.map((c) => c.name),
+      categories: extractDomainCategories(domainCategoriesData),
       rank: domainRank,
       country: page.country || null,
       ip: page.ip || null,
