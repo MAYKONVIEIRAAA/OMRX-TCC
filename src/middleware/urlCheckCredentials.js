@@ -1,6 +1,6 @@
 const { ERROR_MESSAGES } = require("../config/config");
 
-function requireCloudflareCredentials(req, res, next) {
+function requireUrlCheckCredentials(req, res, next) {
   const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
   const apiToken = process.env.CLOUDFLARE_API_TOKEN;
 
@@ -21,4 +21,4 @@ function requireCloudflareCredentials(req, res, next) {
   next();
 }
 
-module.exports = { requireCloudflareCredentials };
+module.exports = { requireUrlCheckCredentials };
