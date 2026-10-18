@@ -4,7 +4,9 @@ const THREAT_MESSAGES = {
 };
 
 function translateThreatTypes(categories) {
-  const messages = (categories || [])
+  const list = categories || [];
+
+  const messages = list
     .map((c) => THREAT_MESSAGES[c.toLowerCase()])
     .filter(Boolean);
 
@@ -12,7 +14,11 @@ function translateThreatTypes(categories) {
     return messages.join(", ");
   }
 
-  return "atividade suspeita detectada";
+  if (list.length > 0) {
+    return list.join(", ");
+  }
+
+  return "ameaça não especificada";
 }
 
 function toVerificationStatus(checkResult) {
@@ -23,15 +29,15 @@ function toVerificationStatus(checkResult) {
   if (!checkResult.malicious) {
     return {
       status: "ready",
-      verification: "Confiavel",
-      message: "Nenhuma ameaca encontrada.",
+      verification: "Confiável",
+      message: "Nenhuma ameaça encontrada.",
     };
   }
 
   return {
     status: "ready",
     verification: "Suspeito",
-    message: `Possivel risco: ${translateThreatTypes(checkResult.threat?.categories)}.`,
+    message: `Possível risco: ${translateThreatTypes(checkResult.threat?.categories)}.`,
   };
 }
 

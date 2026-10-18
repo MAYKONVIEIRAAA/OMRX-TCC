@@ -99,10 +99,6 @@ async function startCheck(targetUrl) {
   const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
   const apiToken = process.env.CLOUDFLARE_API_TOKEN;
 
-  if (!accountId || !apiToken) {
-    throw new UrlScanError("Credenciais da Cloudflare nao configuradas", { code: "MISSING_API_KEY" });
-  }
-
   if (typeof targetUrl !== "string" || !targetUrl.trim()) {
     throw new UrlScanError("Informe uma URL valida", { code: "INVALID_URL" });
   }
@@ -114,10 +110,6 @@ async function startCheck(targetUrl) {
 async function getCheckResult(scanId) {
   const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
   const apiToken = process.env.CLOUDFLARE_API_TOKEN;
-
-  if (!accountId || !apiToken) {
-    throw new UrlScanError("Credenciais da Cloudflare nao configuradas", { code: "MISSING_API_KEY" });
-  }
 
   const { pending, result } = await getScanResult(scanId, accountId, apiToken);
 
