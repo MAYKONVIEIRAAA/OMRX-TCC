@@ -1,4 +1,5 @@
 const urlRiskService = require("../services/urlRiskService");
+const { toVerificationStatus } = require("../services/verificationStatus");
 const { ERROR_MESSAGES } = require("../config/config");
 
 function handleError(res, err) {
@@ -21,7 +22,8 @@ async function start(req, res) {
 async function result(req, res) {
   try {
     const resultado = await urlRiskService.getCheckResult(req.params.scanId);
-    return res.status(200).json(resultado);
+    const verification = toVerificationStatus(resultado);
+    return res.status(200).json({ ...resultado, ...verification });
   } catch (err) {
     return handleError(res, err);
   }
