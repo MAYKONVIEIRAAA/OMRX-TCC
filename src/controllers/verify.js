@@ -8,8 +8,9 @@ async function verify(req, res) {
     const verification = toVerificationStatus(resultado);
 
     return res.status(200).json({
-      status: verification.verification,
+      ...resultado,
       url: req.body.url,
+      verification: verification.verification,
       message: verification.message,
     });
   } catch (err) {
