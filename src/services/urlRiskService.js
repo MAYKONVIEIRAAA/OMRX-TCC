@@ -128,8 +128,28 @@ async function getCheckResult(scanId) {
   return { status: "ready", ...formatResult(result) };
 }
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function checkUrlAndWait(targetUrl) {
+  const { URL_CHECK_PROVIDER } = require("../config/config");
+  const { scanId } = await startCheck(targetUrl);
+
+  for (let attempt = 0; attempt < URL_CHECK_PROVIDER.MAX_POLL_ATTEMPTS; attempt++) {
+    await sleep(URL_CHECK_PROVIDER.POLL_INTERVAL_MS);
+    const resultado = await getCheckResult(scanId);
+    if (resultado.status === "ready") {
+      return resultado;
+    }
+  }
+
+  throw new UrlScanError("O escaneamento demorou demais para concluir", { code: "TIMEOUT" });
+}
+
 module.exports = {
   startCheck,
   getCheckResult,
+  checkUrlAndWait,
   UrlScanError,
 };
