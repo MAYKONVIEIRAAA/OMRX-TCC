@@ -18,6 +18,6 @@ router.post("/users/login", userMiddleware.validateLogin, userController.login);
 
 router.post("/urls/check", authMiddleware.auth, requireUrlCheckCredentials, urlCheckMiddleware.validateUrl, urlCheckController.start);
 router.get("/urls/check/:scanId", authMiddleware.auth, requireUrlCheckCredentials, urlCheckController.result);
-router.post("/verify", requireUrlCheckCredentials, verifyMiddleware.validateUrl, verifyController.verify);
+router.post("/verify", authMiddleware.auth, requireUrlCheckCredentials, verifyMiddleware.validateUrl, verifyController.verify);
 
 module.exports = router;
