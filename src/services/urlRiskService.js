@@ -16,6 +16,14 @@ function extractDomainCategories(domainCategoriesData) {
   return Array.from(names);
 }
 
+function calculateDomainAgeDays(createdDate) {
+  if (!createdDate) return null;
+  const created = new Date(createdDate);
+  if (isNaN(created.getTime())) return null;
+  const diffMs = Date.now() - created.getTime();
+  return Math.floor(diffMs / (1000 * 60 * 60 * 24));
+}
+
 function calculateRiskScore({ malicious, maliciousRequestCount, totalRequests, securePercentage }) {
   let score = malicious ? 60 : 0;
 
@@ -41,6 +49,7 @@ function formatResult(result) {
   const phishingData = result?.meta?.processors?.phishing?.data || [];
   const domainCategoriesData = result?.meta?.processors?.domainCategories?.data || [];
   const radarRank = result?.meta?.processors?.radarRank?.data || [];
+  const whoisData = result?.meta?.processors?.whois?.data || {};
 
   const maliciousRequestCount = stats.malicious || 0;
   const totalRequests = sumRequests(ipStats);
@@ -68,6 +77,8 @@ function formatResult(result) {
       country: page.country || null,
       ip: page.ip || null,
       asn: page.asnname || null,
+      createdAt: whoisData.created_date || null,
+      ageDays: calculateDomainAgeDays(whoisData.created_date),
     },
     page: {
       title: page.title || null,
