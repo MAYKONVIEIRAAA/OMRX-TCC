@@ -9,4 +9,12 @@ async function create({ url, statusId, threatTypeId, userId }) {
   return result.insertId;
 }
 
-module.exports = { create };
+async function countAll() {
+  const [rows] = await pool.execute(
+    "SELECT COUNT(*) AS total, MAX(created_at) AS lastUpdatedAt FROM verifications"
+  );
+
+  return rows[0];
+}
+
+module.exports = { create, countAll };
