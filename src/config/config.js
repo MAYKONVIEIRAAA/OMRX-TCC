@@ -1,11 +1,11 @@
 module.exports = {
   ERROR_MESSAGES: {
-    MISSING_API_KEY: "Servico de verificacao indisponivel no momento. Tente novamente mais tarde.",
-    MISSING_ACCOUNT_ID: "Servico de verificacao indisponivel no momento. Tente novamente mais tarde.",
-    INVALID_URL: "Informe um link valido para verificar.",
-    TIMEOUT: "A verificacao demorou demais. Tente novamente.",
-    NETWORK_ERROR: "Nao foi possivel conectar ao servico de verificacao. Tente novamente.",
-    API_ERROR: "Nao foi possivel verificar esse link agora. Tente novamente mais tarde.",
+    MISSING_API_KEY: "Serviço de verificação indisponível no momento. Tente novamente mais tarde.",
+    MISSING_ACCOUNT_ID: "Serviço de verificação indisponível no momento. Tente novamente mais tarde.",
+    INVALID_URL: "Informe um link válido para verificar.",
+    TIMEOUT: "A verificação demorou demais. Tente novamente.",
+    NETWORK_ERROR: "Não foi possível conectar ao serviço de verificação. Tente novamente.",
+    API_ERROR: "Não foi possível verificar esse link agora. Tente novamente mais tarde.",
   },
   RETRY: {
     MAX_RETRIES: 2,
