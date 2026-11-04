@@ -38,12 +38,6 @@ async function submitScan(targetUrl, accountId, apiToken) {
       body: JSON.stringify({ url: targetUrl, visibility: "Public" }),
     });
   } catch (err) {
-    if (err.name === "AbortError") {
-      throw new UrlScanError("Tempo limite ao enviar URL para escaneamento", {
-        code: "TIMEOUT",
-        cause: err,
-      });
-    }
     throw new UrlScanError("Falha de comunicacao com a API", {
       code: "NETWORK_ERROR",
       cause: err,
@@ -71,12 +65,6 @@ async function getScanResult(uuid, accountId, apiToken) {
       headers: { Authorization: `Bearer ${apiToken}` },
     });
   } catch (err) {
-    if (err.name === "AbortError") {
-      throw new UrlScanError("Tempo limite ao consultar resultado do scan", {
-        code: "TIMEOUT",
-        cause: err,
-      });
-    }
     throw new UrlScanError("Falha de comunicacao com a API", {
       code: "NETWORK_ERROR",
       cause: err,
