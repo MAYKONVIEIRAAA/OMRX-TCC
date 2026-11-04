@@ -40,37 +40,39 @@ function calculateRiskScore({ malicious, maliciousRequestCount, totalRequests, s
   return Math.round(Math.min(score, 100));
 }
 
-function formatResult(result) {
-  const overall = result?.verdicts?.overall || {};
-  const page = result?.page || {};
-  const task = result?.task || {};
-  const stats = result?.stats || {};
-  const ipStats = stats.ipStats || [];
-  const phishingData = result?.meta?.processors?.phishing?.data || [];
-  const domainCategoriesData = result?.meta?.processors?.domainCategories?.data || [];
-  const radarRank = result?.meta?.processors?.radarRank?.data || [];
-  const whoisData = result?.meta?.processors?.whois?.data || {};
+class VerificationResult {
+  constructor(result) {
+    const overall = result?.verdicts?.overall || {};
+    const page = result?.page || {};
+    const task = result?.task || {};
+    const stats = result?.stats || {};
+    const ipStats = stats.ipStats || [];
+    const phishingData = result?.meta?.processors?.phishing?.data || [];
+    const domainCategoriesData = result?.meta?.processors?.domainCategories?.data || [];
+    const radarRank = result?.meta?.processors?.radarRank?.data || [];
+    const whoisData = result?.meta?.processors?.whois?.data || {};
 
-  const maliciousRequestCount = stats.malicious || 0;
-  const totalRequests = sumRequests(ipStats);
-  const domainRank = radarRank[0]?.rank ?? null;
+    const maliciousRequestCount = stats.malicious || 0;
+    const totalRequests = sumRequests(ipStats);
+    const domainRank = radarRank[0]?.rank ?? null;
 
-  return {
-    safe: !overall.malicious,
-    malicious: overall.malicious || false,
-    riskScore: calculateRiskScore({
+    this.safe = !overall.malicious;
+    this.malicious = overall.malicious || false;
+    this.riskScore = calculateRiskScore({
       malicious: overall.malicious,
       maliciousRequestCount,
       totalRequests,
       securePercentage: stats.securePercentage,
-    }),
-    threat: {
+    });
+
+    this.threat = {
       categories: overall.categories || [],
       tags: overall.tags || [],
       phishingType: phishingData,
       maliciousRequestCount,
-    },
-    domain: {
+    };
+
+    this.domain = {
       name: page.domain || null,
       categories: extractDomainCategories(domainCategoriesData),
       rank: domainRank,
@@ -79,31 +81,35 @@ function formatResult(result) {
       asn: page.asnname || null,
       createdAt: whoisData.created_date || null,
       ageDays: calculateDomainAgeDays(whoisData.created_date),
-    },
-    page: {
+    };
+
+    this.page = {
       title: page.title || null,
       finalUrl: page.url || null,
       status: page.status || null,
       server: page.server || null,
-    },
-    tls: {
+    };
+
+    this.tls = {
       issuer: page.tlsIssuer || null,
       validDays: page.tlsValidDays ?? null,
       ageDays: page.tlsAgeDays ?? null,
-    },
-    stats: {
+    };
+
+    this.stats = {
       totalLinks: stats.totalLinks ?? null,
       uniqCountries: stats.uniqCountries ?? null,
       uniqASNs: stats.uniqASNs ?? null,
       totalRequests,
       secureRequests: stats.secureRequests ?? null,
       securePercentage: stats.securePercentage ?? null,
-    },
-    scan: {
+    };
+
+    this.scan = {
       scannedAt: task.time || null,
       success: task.success ?? null,
-    },
-  };
+    };
+  }
 }
 
 async function startCheck(targetUrl) {
@@ -128,7 +134,7 @@ async function getCheckResult(scanId) {
     return { status: "pending" };
   }
 
-  return { status: "ready", ...formatResult(result) };
+  return { status: "ready", ...new VerificationResult(result) };
 }
 
 function sleep(ms) {
