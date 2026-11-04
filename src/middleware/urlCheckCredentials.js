@@ -1,6 +1,6 @@
 const { ERROR_MESSAGES } = require("../config/config");
 
-function requireUrlCheckCredentials(req, res, next) {
+function urlCheckCredentialsMiddleware(req, res, next) {
   const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
   const apiToken = process.env.CLOUDFLARE_API_TOKEN;
 
@@ -21,4 +21,4 @@ function requireUrlCheckCredentials(req, res, next) {
   next();
 }
 
-module.exports = { requireUrlCheckCredentials };
+module.exports = { urlCheckCredentialsMiddleware };
