@@ -7,6 +7,10 @@ module.exports = {
     NETWORK_ERROR: "Não foi possível conectar ao serviço de verificação. Tente novamente.",
     API_ERROR: "Não foi possível verificar esse link agora. Tente novamente mais tarde.",
   },
+  THREAT_MESSAGES: {
+    malware: "malware conhecido",
+    phishing: "sinais de phishing",
+  },
   RETRY: {
     MAX_RETRIES: 2,
     INITIAL_DELAY_MS: 500,

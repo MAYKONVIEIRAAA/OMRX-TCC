@@ -1,7 +1,4 @@
-const THREAT_MESSAGES = {
-  malware: "malware conhecido",
-  phishing: "sinais de phishing",
-};
+const { THREAT_MESSAGES } = require("../config/config");
 
 function translateThreatTypes(categories) {
   const list = categories || [];
