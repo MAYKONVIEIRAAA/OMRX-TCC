@@ -27,4 +27,44 @@ async function findOneByEmail(email) {
     return rows[0];
 }
 
-module.exports = {create, findByEmail, findOneByEmail}
+async function findById(id) {
+    const [rows] = await pool.execute(
+        "SELECT * FROM users WHERE user_id = ?",
+        [id]
+    );
+
+    return rows[0];
+}
+
+async function update(id, fields) {
+    const sets = [];
+    const values = [];
+
+    if (fields.name !== undefined) {
+        sets.push("user_name = ?");
+        values.push(fields.name);
+    }
+
+    if (fields.email !== undefined) {
+        sets.push("user_email = ?");
+        values.push(fields.email);
+    }
+
+    if (fields.passwordHash !== undefined) {
+        sets.push("senha_hash = ?");
+        values.push(fields.passwordHash);
+    }
+
+    if (sets.length === 0) {
+        return;
+    }
+
+    values.push(id);
+
+    await pool.execute(
+        `UPDATE users SET ${sets.join(", ")} WHERE user_id = ?`,
+        values
+    );
+}
+
+module.exports = { create, findByEmail, findOneByEmail, findById, update };

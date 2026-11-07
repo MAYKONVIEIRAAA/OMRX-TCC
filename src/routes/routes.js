@@ -11,6 +11,7 @@ const router = Router();
 
 router.post("/users", userMiddleware.validateRegister, userController.create);
 router.post("/users/login", userMiddleware.validateLogin, userController.login);
+router.put("/change/:id", authMiddleware.auth, userMiddleware.validateUpdate, userController.update);
 
 router.post("/urls/check", authMiddleware.auth, webRiskMiddleware.validateUrl, webRiskController.check);
 
