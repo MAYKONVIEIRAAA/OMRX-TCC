@@ -27,4 +27,11 @@ async function findOneByEmail(email) {
     return rows[0];
 }
 
-module.exports = {create, findByEmail, findOneByEmail}
+async function remove(id) {
+    await pool.execute(
+        "DELETE FROM users WHERE user_id = ?",
+        [id]
+    );
+}
+
+module.exports = { create, findByEmail, findOneByEmail, remove };

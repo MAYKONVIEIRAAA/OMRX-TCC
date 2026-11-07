@@ -31,4 +31,16 @@ async function login(req, resp) {
     return resp.status(200).json({ token });
 }
 
-module.exports = { create, login }
+async function remove(req, resp) {
+    const id = Number(req.params.id);
+
+    if (id !== req.auth.id) {
+        return resp.status(403).json({ error: "Você só pode excluir sua própria conta." });
+    }
+
+    await userModel.remove(id);
+
+    return resp.status(204).send();
+}
+
+module.exports = { create, login, remove }
