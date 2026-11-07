@@ -11,6 +11,16 @@ module.exports = {
     malware: "malware conhecido",
     phishing: "sinais de phishing",
   },
+  STATUS_IDS: {
+    SEGURO: 2,
+    SUSPEITO: 3,
+    PERIGOSO: 4,
+  },
+  THREAT_TYPE_IDS: {
+    SCAM: 1,
+    MALWARE: 2,
+    PHISHING: 3,
+  },
   RETRY: {
     MAX_RETRIES: 2,
     INITIAL_DELAY_MS: 500,

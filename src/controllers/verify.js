@@ -1,10 +1,7 @@
 const urlRiskService = require("../services/urlRiskService");
 const { toVerificationStatus } = require("../services/verificationStatus");
-const { ERROR_MESSAGES } = require("../config/config");
+const { ERROR_MESSAGES, STATUS_IDS, THREAT_TYPE_IDS } = require("../config/config");
 const verificationModel = require("../models/verification");
-
-const STATUS_IDS = { SEGURO: 2, SUSPEITO: 3, PERIGOSO: 4 };
-const THREAT_TYPE_IDS = { SCAM: 1, MALWARE: 2, PHISHING: 3 };
 
 function resolveStatusId(resultado) {
   if (!resultado.malicious) return STATUS_IDS.SEGURO;
