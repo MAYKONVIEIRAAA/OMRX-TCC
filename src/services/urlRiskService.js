@@ -1,5 +1,5 @@
 const { submitScan, getScanResult, UrlScanError } = require("../providers/urlCheckProvider");
-const { VerificationResult } = require("./VerificationResult");
+const { VerificationResult } = require("../entities/VerificationResult");
 
 async function startCheck(targetUrl) {
   const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;

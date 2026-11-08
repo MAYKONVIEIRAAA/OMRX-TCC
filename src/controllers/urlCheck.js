@@ -1,5 +1,5 @@
 const urlRiskService = require("../services/urlRiskService");
-const { toVerificationStatus } = require("../services/verificationStatus");
+const { toVerificationStatus } = require("../entities/verificationStatus")
 const { ERROR_MESSAGES } = require("../config/config");
 
 function handleError(res, err) {

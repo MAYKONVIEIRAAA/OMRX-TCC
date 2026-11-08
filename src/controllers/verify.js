@@ -1,5 +1,5 @@
 const urlRiskService = require("../services/urlRiskService");
-const { toVerificationStatus } = require("../services/verificationStatus");
+const { toVerificationStatus } = require("../entities/verificationStatus");
 const { ERROR_MESSAGES, STATUS_IDS, THREAT_TYPE_IDS } = require("../config/config");
 const verificationModel = require("../models/verification");
 
