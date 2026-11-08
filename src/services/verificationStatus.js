@@ -15,7 +15,7 @@ function translateThreatTypes(categories) {
     return list.join(", ");
   }
 
-  return "ameaça não especificada";
+  return "Ameaça não especificada";
 }
 
 function toVerificationStatus(checkResult) {
