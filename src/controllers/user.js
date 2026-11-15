@@ -43,15 +43,13 @@ async function login(req, resp) {
 }
 
 async function remove(req, resp) {
-    const id = Number(req.params.id);
-
-    if (id !== req.auth.id) {
-        return resp.status(403).json({ error: "Você só pode excluir sua própria conta." });
+    try {
+        await userModel.remove(req.auth.id);
+        return resp.status(204).send();
+    } catch (error) {
+        console.error("Erro ao excluir usuario:", error.message);
+        return resp.status(500).json({ error: "Nao foi possivel excluir sua conta. Tente novamente mais tarde." });
     }
-
-    await userModel.remove(id);
-
-    return resp.status(204).send();
 }
 
 async function verifyEmail(req, resp) {
