@@ -54,7 +54,7 @@ async function remove(req, resp) {
 
 async function verifyEmail(req, resp) {
     try {
-        await emailVerificationService.verifyEmail(req.body.token);
+        await emailVerificationService.verifyEmail(req.body?.token);
         return resp.status(200).json({ message: EMAIL_VERIFICATION_MESSAGES.VERIFIED });
     } catch (error) {
         if (error instanceof emailVerificationService.EmailVerificationError) {

@@ -1,11 +1,11 @@
 /* ==========================================================================
-   Tela de cadastro
+   Telas de autenticacao (cadastro, login)
    ========================================================================== */
 .auth-page {
-  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   padding: 80px var(--page-gutter);
 }
 
@@ -20,7 +20,7 @@
   padding: 40px;
   background-color: var(--color-navy-dark);
   border: 1.5px solid var(--color-indigo);
-  border-radius: 20px;
+  border-radius: var(--radius-lg);
 }
 
 .auth-card__head {
@@ -33,133 +33,54 @@
   font-family: var(--font-display);
   font-weight: 700;
   font-size: 32px;
-  line-height: normal;
   color: var(--color-white);
 }
 
-.auth-card__subtitle {
+.auth-card__text {
   font-size: 15px;
   line-height: 22px;
   color: var(--color-white-75);
 }
 
-/* --------------------------------------------------------------------------
-   Formulario
-   -------------------------------------------------------------------------- */
-.auth-form {
+.auth-card__icon {
   display: flex;
-  flex-direction: column;
-  gap: var(--card-gap);
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  background-color: var(--color-orange-15);
+  border-radius: 50%;
+  color: var(--color-orange);
 }
 
+.auth-card__icon svg {
+  stroke: currentColor;
+  stroke-width: 2.333;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.auth-form,
 .auth-form__fields {
   display: flex;
   flex-direction: column;
   gap: var(--card-gap);
 }
 
-.form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.form-field__label {
+.auth-form__forgot {
+  align-self: flex-start;
   font-weight: 500;
   font-size: 13px;
   color: var(--color-sky);
 }
 
-.form-field__input {
-  width: 100%;
-  padding: 14px 16px;
-  background-color: var(--color-navy);
-  border: 1.5px solid var(--color-indigo);
-  border-radius: 10px;
-  font-family: var(--font-mono);
-  font-size: 14px;
-  line-height: normal;
-  color: var(--color-white);
-  outline: none;
-  transition: border-color 0.15s ease;
-}
-
-.form-field__input::placeholder {
-  color: var(--color-sky-55);
-  opacity: 1;
-}
-
-.form-field__input:focus-visible {
-  border-color: var(--color-sky);
-}
-
-.form-field__input[aria-invalid="true"] {
-  border-color: var(--color-error);
-}
-
-.form-field__error {
-  font-size: 13px;
-  color: var(--color-error);
-}
-
-.form-field__error:empty {
-  display: none;
-}
-
-.form-status {
-  font-size: 14px;
-  line-height: 20px;
-  text-align: center;
-}
-
-.form-status:empty {
-  display: none;
-}
-
-.form-status--error {
-  color: var(--color-error);
-}
-
-.form-status--success {
-  color: var(--color-sky);
+.auth-form__forgot:hover,
+.auth-form__forgot:focus-visible {
+  text-decoration: underline;
 }
 
 /* --------------------------------------------------------------------------
-   Botao primario
-   -------------------------------------------------------------------------- */
-.button-primary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  padding: 14px 24px;
-  background-color: var(--color-orange);
-  border: none;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 15px;
-  line-height: normal;
-  color: var(--color-black);
-  cursor: pointer;
-  transition: filter 0.15s ease;
-}
-
-.button-primary:hover {
-  filter: brightness(1.08);
-}
-
-.button-primary:focus-visible {
-  outline: 2px solid var(--color-sky);
-  outline-offset: 2px;
-}
-
-.button-primary:disabled {
-  cursor: wait;
-  opacity: 0.7;
-}
-
-/* --------------------------------------------------------------------------
-   Divisor e link para login
+   Divisor e link para outra tela de autenticacao
    -------------------------------------------------------------------------- */
 .auth-divider {
   display: flex;
@@ -215,8 +136,45 @@
     border-radius: 18px;
   }
 
-  .auth-card__head {
-    gap: 6px;
+  .auth-card--login {
+    padding-bottom: 28px;
+  }
+
+  .auth-page--notice {
+    padding: 32px 16px 40px;
+  }
+
+  .auth-card--notice {
+    --card-gap: 18.5px;
+
+    padding: 32px 28.5px;
+    border-radius: 21px;
+  }
+
+  .auth-card--notice .auth-card__head {
+    gap: 7px;
+  }
+
+  .auth-card--notice .auth-card__icon {
+    background-color: var(--color-orange);
+    color: var(--color-navy-dark);
+  }
+
+  .auth-card--notice .button-primary {
+    padding: 17.5px 27.5px;
+    border-radius: 12px;
+    font-size: 17px;
+  }
+
+  .auth-card--notice .auth-switch {
+    padding-top: 9px;
+    gap: 7px;
+    font-size: 16px;
+  }
+
+  .auth-card--verify-email .auth-card__text {
+    font-size: 17px;
+    line-height: 25px;
   }
 
   .auth-card__title {
@@ -229,18 +187,9 @@
     padding-top: 6px;
   }
 
-  .form-field__label {
+  .auth-form__forgot {
+    padding: 2px 0 6px;
     font-size: 14px;
-    color: var(--color-white);
-  }
-
-  .form-field__input {
-    font-family: var(--font-body);
-    font-size: 15px;
-  }
-
-  .button-primary {
-    padding: 15px 24px;
   }
 
   .auth-divider {
