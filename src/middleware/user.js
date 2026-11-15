@@ -57,7 +57,7 @@ async function validateLogin(req, resp, next) {
 async function validateUpdate(req, resp, next) {
     const { name, email, password } = req.body;
 
-    if (name === undefined && email === undefined && password === undefined) {
+    if (!name && !email && !password) {
         return resp.status(400).json({ error: "Informe ao menos um campo para atualizar." });
     }
 
