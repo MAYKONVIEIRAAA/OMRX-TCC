@@ -11,9 +11,9 @@ const router = Router();
 
 router.post("/users", userMiddleware.validateRegister, userController.create);
 router.post("/users/login", userMiddleware.validateLogin, userController.login);
-router.delete("/delete/:id", authMiddleware.auth, userController.remove);
 router.post("/users/verify-email", userController.verifyEmail);
 router.post("/users/resend-verification", userMiddleware.validateResendVerification, userController.resendVerification);
+router.delete("/delete/:id", authMiddleware.auth, userMiddleware.validateDeleteAccount, userController.remove);
 
 router.post("/urls/check", authMiddleware.auth, webRiskMiddleware.validateUrl, webRiskController.check);
 
