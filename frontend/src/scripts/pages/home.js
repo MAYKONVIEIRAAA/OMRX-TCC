@@ -1,5 +1,7 @@
+import { formatCompactCount } from "../formatters/numberFormatter.js";
 import { LINK_CHECK_MESSAGES } from "../messages.js";
 import { buildCheckLinkUrl } from "../routes.js";
+import { getStats } from "../services/statsService.js";
 import { isLoggedIn } from "../services/userService.js";
 import { initAccordion } from "../ui/accordion.js";
 import { restoreButton } from "../ui/button.js";
@@ -10,6 +12,16 @@ const COMPACT_PLACEHOLDER_MEDIA_QUERY = "(max-width: 480px)";
 
 const linkCheckForm = document.getElementById("link-check-form");
 const guestActions = document.getElementById("hero-guest-actions");
+const totalVerificationsValue = document.getElementById("stats-total-verifications");
+
+async function loadTotalVerifications() {
+  try {
+    const { totalVerifications } = await getStats();
+    totalVerificationsValue.textContent = formatCompactCount(totalVerifications);
+  } catch {
+    totalVerificationsValue.textContent = formatCompactCount(0);
+  }
+}
 
 function usePlaceholderForViewport(input) {
   const fullPlaceholder = input.placeholder;
@@ -52,4 +64,5 @@ if (isLoggedIn()) {
   guestActions.hidden = false;
 }
 
+loadTotalVerifications();
 initAccordion(document.querySelector(".faq__list"));
