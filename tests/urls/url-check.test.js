@@ -1,5 +1,4 @@
 const { describe, it } = require("node:test");
-const assert = require("node:assert/strict");
 
 const h = require("../helpers/harness");
 const { post, request, provider, reply, hangUntilAborted, loginToken, bearer, expectResponse } = h;
@@ -113,10 +112,39 @@ describe("GET /urls/check/:scanId — resultado da verificação", () => {
 
     const res = await request("GET", "/urls/check/scan-123", { headers: bearer(token) });
 
-    assert.equal(res.status, 200);
-    assert.equal(res.body.status, "ready");
-    assert.equal(res.body.malicious, false);
-    assert.equal(res.body.verification, "Confiável");
+    expectResponse(res, {
+      status: 200,
+      body: {
+        status: "ready",
+        safe: true,
+        malicious: false,
+        riskScore: 2,
+        threat: { categories: [], tags: [], phishingType: [], maliciousRequestCount: 0 },
+        domain: {
+          name: "exemplo.com",
+          categories: [],
+          rank: null,
+          country: "BR",
+          ip: "1.2.3.4",
+          asn: null,
+          createdAt: null,
+          ageDays: null,
+        },
+        page: { title: null, finalUrl: "https://exemplo.com", status: null, server: null },
+        tls: { issuer: null, validDays: null, ageDays: null },
+        stats: {
+          totalLinks: null,
+          uniqCountries: null,
+          uniqASNs: null,
+          totalRequests: 10,
+          secureRequests: null,
+          securePercentage: 90,
+        },
+        scan: { scannedAt: "2026-01-01T00:00:00Z", success: true },
+        verification: "Confiável",
+        message: "Nenhuma ameaça encontrada.",
+      },
+    });
   });
 
   it("Deve responder 200 com o link suspeito quando o resultado é malicioso", async () => {
@@ -125,10 +153,38 @@ describe("GET /urls/check/:scanId — resultado da verificação", () => {
 
     const res = await request("GET", "/urls/check/scan-123", { headers: bearer(token) });
 
-    assert.equal(res.status, 200);
-    assert.equal(res.body.status, "ready");
-    assert.equal(res.body.malicious, true);
-    assert.equal(res.body.verification, "Suspeito");
-    assert.match(res.body.message, /sinais de phishing/);
+    expectResponse(res, {
+      status: 200,
+      body: {
+        status: "ready",
+        safe: false,
+        malicious: true,
+        riskScore: 64,
+        threat: { categories: ["phishing"], tags: [], phishingType: [], maliciousRequestCount: 1 },
+        domain: {
+          name: "exemplo.com",
+          categories: [],
+          rank: null,
+          country: "BR",
+          ip: "1.2.3.4",
+          asn: null,
+          createdAt: null,
+          ageDays: null,
+        },
+        page: { title: null, finalUrl: "https://exemplo.com", status: null, server: null },
+        tls: { issuer: null, validDays: null, ageDays: null },
+        stats: {
+          totalLinks: null,
+          uniqCountries: null,
+          uniqASNs: null,
+          totalRequests: 10,
+          secureRequests: null,
+          securePercentage: 90,
+        },
+        scan: { scannedAt: "2026-01-01T00:00:00Z", success: true },
+        verification: "Suspeito",
+        message: "Possível risco: sinais de phishing.",
+      },
+    });
   });
 });
