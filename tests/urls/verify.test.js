@@ -1,4 +1,5 @@
 const { describe, it } = require("node:test");
+const assert = require("node:assert/strict");
 
 const h = require("../helpers/harness");
 const { post, provider, reply, hangUntilAborted, loginToken, bearer, expectResponse, db } = h;
@@ -31,7 +32,7 @@ describe("POST /verify — verificação completa (polling)", () => {
     });
   });
 
-  it("Deve responder 200 e salvar a verificação quando o link é seguro", async () => {
+  it("Deve responder 200 e salvar a verificação quando o link for seguro", async () => {
     const token = await loginToken();
     provider.handler = (url) => {
       if (url.includes("/result/")) return reply(200, scanResult({ malicious: false }));
@@ -40,14 +41,47 @@ describe("POST /verify — verificação completa (polling)", () => {
 
     const res = await post("/verify", { url: "https://exemplo.com" }, bearer(token));
 
-    expectResponse(res, { status: 200 });
-    const saved = db.verifications();
-    if (saved.length !== 1 || saved[0].status_id !== 2) {
-      throw new Error("Verificação não foi salva como segura");
-    }
+    expectResponse(res, {
+      status: 200,
+      body: {
+        status: "ready",
+        safe: true,
+        malicious: false,
+        riskScore: 0,
+        threat: { categories: [], tags: [], phishingType: [], maliciousRequestCount: 0 },
+        domain: {
+          name: "exemplo.com",
+          categories: [],
+          rank: null,
+          country: null,
+          ip: null,
+          asn: null,
+          createdAt: null,
+          ageDays: null,
+        },
+        page: { title: null, finalUrl: "https://exemplo.com", status: null, server: null },
+        tls: { issuer: null, validDays: null, ageDays: null },
+        stats: {
+          totalLinks: null,
+          uniqCountries: null,
+          uniqASNs: null,
+          totalRequests: 5,
+          secureRequests: null,
+          securePercentage: 100,
+        },
+        scan: { scannedAt: "2026-01-01T00:00:00Z", success: true },
+        url: "https://exemplo.com",
+        verification: "Confiável",
+        message: "Nenhuma ameaça encontrada.",
+      },
+    });
+
+    assert.equal(db.verifications().length, 1);
+    assert.equal(db.verifications()[0].status_id, 2);
+    assert.equal(db.verifications()[0].threat_type_id, null);
   });
 
-  it("Deve responder 200 e salvar como perigoso quando o link é malicioso", async () => {
+  it("Deve responder 200 e salvar a verificação quando o link for malicioso", async () => {
     const token = await loginToken();
     provider.handler = (url) => {
       if (url.includes("/result/")) return reply(200, scanResult({ malicious: true, categories: ["malware"] }));
@@ -56,11 +90,44 @@ describe("POST /verify — verificação completa (polling)", () => {
 
     const res = await post("/verify", { url: "https://exemplo.com" }, bearer(token));
 
-    expectResponse(res, { status: 200 });
-    const [saved] = db.verifications();
-    if (!saved || saved.threat_type_id !== 2) {
-      throw new Error("Verificação não foi salva com o tipo de ameaça correto");
-    }
+    expectResponse(res, {
+      status: 200,
+      body: {
+        status: "ready",
+        safe: false,
+        malicious: true,
+        riskScore: 65,
+        threat: { categories: ["malware"], tags: [], phishingType: [], maliciousRequestCount: 1 },
+        domain: {
+          name: "exemplo.com",
+          categories: [],
+          rank: null,
+          country: null,
+          ip: null,
+          asn: null,
+          createdAt: null,
+          ageDays: null,
+        },
+        page: { title: null, finalUrl: "https://exemplo.com", status: null, server: null },
+        tls: { issuer: null, validDays: null, ageDays: null },
+        stats: {
+          totalLinks: null,
+          uniqCountries: null,
+          uniqASNs: null,
+          totalRequests: 5,
+          secureRequests: null,
+          securePercentage: 100,
+        },
+        scan: { scannedAt: "2026-01-01T00:00:00Z", success: true },
+        url: "https://exemplo.com",
+        verification: "Suspeito",
+        message: "Possível risco: malware conhecido.",
+      },
+    });
+
+    assert.equal(db.verifications().length, 1);
+    assert.equal(db.verifications()[0].status_id, 3);
+    assert.equal(db.verifications()[0].threat_type_id, 2);
   });
 
   it("Deve responder 502 quando a verificação não conclui dentro do limite de tentativas (timeout de polling)", async (t) => {
@@ -77,6 +144,7 @@ describe("POST /verify — verificação completa (polling)", () => {
       status: 502,
       body: { error: h.config.ERROR_MESSAGES.TIMEOUT, code: "TIMEOUT" },
     });
+    assert.equal(db.verifications().length, 0);
   });
 
   it("Deve responder 502 quando a submissão inicial falha", async () => {
@@ -89,5 +157,6 @@ describe("POST /verify — verificação completa (polling)", () => {
       status: 502,
       body: { error: h.config.ERROR_MESSAGES.NETWORK_ERROR, code: "NETWORK_ERROR" },
     });
+    assert.equal(db.verifications().length, 0);
   });
 });
