@@ -16,7 +16,12 @@ export const PAGES = {
 };
 
 const EMAIL_QUERY_PARAM = "email";
+const TOKEN_QUERY_PARAM = "token";
 const LINK_QUERY_PARAM = "url";
+
+function getQueryParam(queryString, paramName) {
+  return new URLSearchParams(queryString).get(paramName)?.trim() || null;
+}
 
 export function buildEmailSentUrl(email) {
   const queryString = new URLSearchParams({ [EMAIL_QUERY_PARAM]: email });
@@ -29,5 +34,9 @@ export function buildCheckLinkUrl(link) {
 }
 
 export function getEmailFromQueryString(queryString) {
-  return new URLSearchParams(queryString).get(EMAIL_QUERY_PARAM)?.trim() || null;
+  return getQueryParam(queryString, EMAIL_QUERY_PARAM);
+}
+
+export function getTokenFromQueryString(queryString) {
+  return getQueryParam(queryString, TOKEN_QUERY_PARAM);
 }

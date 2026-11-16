@@ -17,8 +17,9 @@ const ROOT = path.join(__dirname, "..", "..");
 
 process.env.jwt_secret = "segredo-de-teste";
 process.env.jwt_expires_in = "1h";
-process.env.IPQS_API_KEY = "chave-de-teste";
 process.env.APP_URL = "http://localhost:3000";
+process.env.CLOUDFLARE_ACCOUNT_ID = "conta-de-teste";
+process.env.CLOUDFLARE_API_TOKEN = "token-de-teste";
 
 const { createFakeDb } = require("./fakeDb");
 
@@ -43,6 +44,7 @@ inject("src/providers/mailProvider.js", {
 const config = require(path.join(ROOT, "src/config/config.js"));
 config.RETRY.INITIAL_DELAY_MS = 1;
 config.URL_CHECK_PROVIDER.TIMEOUT_MS = 30;
+config.URL_CHECK_PROVIDER.POLL_INTERVAL_MS = 1;
 
 // O cliente HTTP dos testes usa o fetch real; o app passa a usar o simulado.
 const realFetch = global.fetch;
