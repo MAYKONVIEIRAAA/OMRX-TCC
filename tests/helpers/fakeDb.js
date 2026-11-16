@@ -1,11 +1,12 @@
 // Banco em memoria que imita o subconjunto de SQL usado pelos models
-// (src/models/user.js e src/models/emailVerificationToken.js).
+// (src/models/user.js, src/models/emailVerificationToken.js e src/models/verification.js).
 // A comparacao de email e case-insensitive, como a collation padrao do MySQL.
 
 function createFakeDb() {
-  const state = { users: [], tokens: [] };
+  const state = { users: [], tokens: [], verifications: [] };
   let userSeq = 0;
   let tokenSeq = 0;
+  let verificationSeq = 0;
 
   const sameEmail = (a, b) => String(a).toLowerCase() === String(b).toLowerCase();
 
@@ -77,6 +78,28 @@ function createFakeDb() {
       return [{ affectedRows: before - state.tokens.length }];
     }
 
+    if (q.startsWith("INSERT INTO verifications")) {
+      const [url, statusId, threatTypeId, userId] = params;
+      const row = {
+        id: ++verificationSeq,
+        url,
+        status_id: statusId,
+        threat_type_id: threatTypeId,
+        user_id: userId,
+        created_at: new Date(),
+      };
+      state.verifications.push(row);
+      return [{ insertId: row.id }];
+    }
+
+    if (q.startsWith("SELECT COUNT(*) AS total")) {
+      const rows = state.verifications;
+      const lastUpdatedAt = rows.length
+        ? new Date(Math.max(...rows.map((r) => r.created_at.getTime())))
+        : null;
+      return [[{ total: rows.length, lastUpdatedAt }]];
+    }
+
     throw new Error(`Query nao suportada pelo fake DB: ${q}`);
   }
 
@@ -86,13 +109,16 @@ function createFakeDb() {
     reset() {
       state.users = [];
       state.tokens = [];
+      state.verifications = [];
       userSeq = 0;
       tokenSeq = 0;
+      verificationSeq = 0;
     },
 
     // --- helpers de inspecao e manipulacao usados pelos testes ---
     users: () => state.users,
     tokens: () => state.tokens,
+    verifications: () => state.verifications,
     findUser: (email) => state.users.find((u) => sameEmail(u.user_email, email)),
     tokensOf: (userId) => state.tokens.filter((t) => t.user_id === userId),
 
