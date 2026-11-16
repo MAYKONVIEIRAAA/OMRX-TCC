@@ -17,7 +17,6 @@ const ROOT = path.join(__dirname, "..", "..");
 
 process.env.jwt_secret = "segredo-de-teste";
 process.env.jwt_expires_in = "1h";
-process.env.IPQS_API_KEY = "chave-de-teste";
 process.env.APP_URL = "http://localhost:3000";
 process.env.CLOUDFLARE_ACCOUNT_ID = "conta-de-teste";
 process.env.CLOUDFLARE_API_TOKEN = "token-de-teste";
