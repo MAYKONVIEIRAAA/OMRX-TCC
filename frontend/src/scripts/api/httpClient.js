@@ -35,6 +35,10 @@ async function sendRequest(path, options) {
   return responseBody;
 }
 
+export function getJson(path) {
+  return sendRequest(path, { method: "GET" });
+}
+
 export function postJson(path, requestBody) {
   return sendRequest(path, {
     method: "POST",
