@@ -1,0 +1,191 @@
+.how-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 72px var(--page-gutter) 48px;
+  text-align: center;
+}
+
+.how-hero__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 48px;
+  line-height: 56px;
+  color: var(--color-white);
+}
+
+.how-hero__text {
+  max-width: 560px;
+  font-size: 18px;
+  line-height: 28px;
+  color: var(--color-white-78);
+}
+
+/* --------------------------------------------------------------------------
+   Passos
+   -------------------------------------------------------------------------- */
+.how-steps {
+  padding: 0 var(--page-gutter) 72px;
+}
+
+.how-steps__list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 880px;
+  margin-inline: auto;
+  list-style: none;
+}
+
+.how-step {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+  padding: 24px 28px;
+  background-color: var(--color-navy-dark);
+  border: 1.5px solid var(--color-indigo);
+  border-radius: 16px;
+}
+
+/* A barra laranja so aparece no mobile */
+.how-step::before {
+  display: none;
+  content: "";
+  width: 40px;
+  height: 3px;
+  background-color: var(--color-orange);
+}
+
+.how-step__number {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 32px;
+  line-height: 1;
+  color: var(--color-orange);
+}
+
+.how-step__body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.how-step__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 22px;
+  color: var(--color-white);
+}
+
+.how-step__text {
+  font-size: 16px;
+  line-height: 25px;
+  color: var(--color-white-75);
+}
+
+/* --------------------------------------------------------------------------
+   Chamada para comecar
+   -------------------------------------------------------------------------- */
+.how-cta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  padding: 64px var(--page-gutter);
+  background-color: var(--color-sky);
+  text-align: center;
+}
+
+.how-cta__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 34px;
+  color: var(--color-navy);
+}
+
+.how-cta__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 24px;
+  background-color: var(--color-navy);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--color-white);
+  white-space: nowrap;
+  transition: filter 0.15s ease;
+}
+
+.how-cta__button:hover {
+  filter: brightness(1.25);
+}
+
+/* ==========================================================================
+   Mobile/tablet
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .how-hero {
+    align-items: flex-start;
+    gap: 12px;
+    padding: 40px var(--page-gutter) 24px;
+    text-align: left;
+  }
+
+  .how-hero__title {
+    font-size: 32px;
+    line-height: 36px;
+  }
+
+  .how-hero__text {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .how-steps {
+    padding-bottom: 32px;
+  }
+
+  .how-step {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 24px;
+  }
+
+  .how-step::before {
+    display: block;
+  }
+
+  .how-step__number {
+    font-family: var(--font-mono);
+    font-size: 14px;
+  }
+
+  /* No mobile a chamada fica sobre o fundo navy, com o botao laranja */
+  .how-cta {
+    gap: 18px;
+    padding: 16px var(--page-gutter) 56px;
+    background-color: transparent;
+  }
+
+  .how-cta__title {
+    font-size: 26px;
+    line-height: 30px;
+    color: var(--color-white);
+  }
+
+  .how-cta__button {
+    width: 100%;
+    padding: 15px 24px;
+    background-color: var(--color-orange);
+    color: var(--color-black);
+  }
+
+  .how-cta__button:hover {
+    filter: brightness(1.08);
+  }
+}
