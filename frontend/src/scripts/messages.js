@@ -14,6 +14,8 @@ export const LOGIN_MESSAGES = {
 };
 
 export const LINK_CHECK_MESSAGES = {
+  emptyLink: "Cole um link para verificar.",
+  invalidLink: "Informe um link válido, como https://exemplo.com.",
   submitting: "Verificando...",
   unexpectedError: "Não foi possível verificar o link. Tente novamente.",
 };
