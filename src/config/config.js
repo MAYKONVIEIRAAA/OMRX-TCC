@@ -45,5 +45,9 @@ module.exports = {
       "Se houver uma conta pendente de verificacao com esse e-mail, enviaremos um novo link.",
     SEND_FAILED: "Nao foi possivel enviar o e-mail de verificacao. Tente novamente mais tarde.",
     NOT_VERIFIED: "Confirme seu e-mail antes de entrar. Verifique sua caixa de entrada.",
+    EXPIRED_RESENT:
+      "Seu link de confirmação de email expirou. Enviamos um novo link para o seu e-mail.",
+    EXPIRED_RESEND_FAILED:
+      "Seu link de confirmação de email expirou e não conseguimos enviar um novo agora. Tente novamente mais tarde.",
   },
 };
