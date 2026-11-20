@@ -23,13 +23,13 @@ function buildVerificationEmail({ name, verifyUrl, expiresInHours }) {
   const subject = "Confirme seu e-mail no OMRX";
 
   const text = [
-    `Ola, ${name}!`,
+    `Olá, ${name}!`,
     "",
     "Para ativar sua conta no OMRX, confirme seu e-mail acessando o link abaixo:",
     verifyUrl,
     "",
     `O link expira em ${expiresInHours} horas.`,
-    "Se voce nao criou uma conta no OMRX, ignore este e-mail.",
+    "Se você não criou uma conta no OMRX, ignore este e-mail.",
   ].join("\n");
 
   const html = renderTemplate(HTML_TEMPLATE, { name, verifyUrl, expiresInHours });
