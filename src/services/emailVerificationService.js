@@ -81,9 +81,25 @@ async function resendVerificationEmail(email) {
   });
 }
 
+async function resendIfTokenExpired({ id, name, email }) {
+  if (await tokenModel.hasActiveToken(id)) {
+    return false;
+  }
+
+  try {
+    await sendVerificationEmail({ id, name, email });
+  } catch (error) {
+    await tokenModel.deleteByUserId(id);
+    throw error;
+  }
+
+  return true;
+}
+
 module.exports = {
   sendVerificationEmail,
   verifyEmail,
   resendVerificationEmail,
+  resendIfTokenExpired,
   EmailVerificationError,
 };

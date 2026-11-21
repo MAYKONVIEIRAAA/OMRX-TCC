@@ -1,6 +1,6 @@
 import { getErrorMessage } from "../api/httpClient.js";
 import { restoreButton, showButtonLoading } from "./button.js";
-import { clearStatus, showErrorStatus } from "./formStatus.js";
+import { clearStatus, showErrorStatus, showSuccessStatus } from "./formStatus.js";
 
 function isMarkedInvalid(input) {
   return input.getAttribute("aria-invalid") === "true";
@@ -70,7 +70,12 @@ export function initValidatedForm({
     showButtonLoading(submitButton, loadingLabel);
 
     try {
-      await onValidSubmit(readFormValues());
+      const result = await onValidSubmit(readFormValues());
+
+      if (result?.successMessage) {
+        showSuccessStatus(statusElement, result.successMessage);
+        restoreButton(submitButton);
+      }
     } catch (error) {
       showErrorStatus(statusElement, getErrorMessage(error, fallbackErrorMessage));
       restoreButton(submitButton);
