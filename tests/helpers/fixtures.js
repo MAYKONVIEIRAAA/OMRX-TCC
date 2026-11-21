@@ -34,6 +34,13 @@ async function readyForResend(overrides) {
   return ctx;
 }
 
+async function expiredPendingUser(overrides) {
+  const ctx = await pendingUser(overrides);
+  db.expireTokens(ctx.row.user_id);
+  mail.sent = [];
+  return ctx;
+}
+
 // Cadastra e marca o email como verificado.
 async function verifiedAccount() {
   await h.register();
@@ -54,6 +61,7 @@ module.exports = {
   credentials,
   pendingUser,
   readyForResend,
+  expiredPendingUser,
   verifiedAccount,
   lastToken,
   BAD_EMAIL,

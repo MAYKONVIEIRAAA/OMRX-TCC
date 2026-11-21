@@ -19,6 +19,17 @@ async function findByHash(tokenHash) {
   return rows[0];
 }
 
+async function hasActiveToken(userId) {
+  const [rows] = await pool.execute(
+    `SELECT 1 FROM email_verification_tokens
+     WHERE user_id = ? AND expires_at > NOW()
+     LIMIT 1`,
+    [userId]
+  );
+
+  return rows.length > 0;
+}
+
 async function getSecondsSinceLastToken(userId) {
   const [rows] = await pool.execute(
     `SELECT TIMESTAMPDIFF(SECOND, MAX(created_at), NOW()) AS seconds
@@ -37,6 +48,7 @@ async function deleteByUserId(userId) {
 module.exports = {
   create,
   findByHash,
+  hasActiveToken,
   getSecondsSinceLastToken,
   deleteByUserId,
 };

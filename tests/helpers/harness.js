@@ -15,8 +15,8 @@ const jwt = require("jsonwebtoken");
 
 const ROOT = path.join(__dirname, "..", "..");
 
-process.env.jwt_secret = "segredo-de-teste";
-process.env.jwt_expires_in = "1h";
+process.env.JWT_SECRET = "segredo-de-teste";
+process.env.JWT_EXPIRES_IN = "1h";
 process.env.APP_URL = "http://localhost:3000";
 process.env.CLOUDFLARE_ACCOUNT_ID = "conta-de-teste";
 process.env.CLOUDFLARE_API_TOKEN = "token-de-teste";
