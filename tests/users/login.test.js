@@ -18,7 +18,7 @@ describe("POST /users/login — autenticação", () => {
 
     it("Deve responder 200 com um JWT assinado contendo o id e o email do usuário", async () => {
       const res = await post("/users/login", credentials);
-      const { id, email, exp, iat } = h.jwt.verify(res.body.token, process.env.jwt_secret);
+      const { id, email, exp, iat } = h.jwt.verify(res.body.token, process.env.JWT_SECRET);
 
       expectResponse(res, { status: 200, body: { token: res.body.token } });
       assert.deepEqual(
