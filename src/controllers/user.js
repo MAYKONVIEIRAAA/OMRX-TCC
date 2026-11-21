@@ -46,6 +46,7 @@ async function update(req, resp) {
     const id = Number(req.params.id);
     const { name, email, newPassword } = req.body;
     const fields = {};
+    const response = { id };
 
     if (id !== req.auth.id) {
         return resp.status(403).json({ error: "Você só pode alterar seus próprios dados." });
@@ -53,6 +54,7 @@ async function update(req, resp) {
 
     if (name) {
         fields.name = name.trim();
+        response.name = fields.name;
     }
 
     if (email) {
@@ -64,6 +66,7 @@ async function update(req, resp) {
         }
 
         fields.email = normalizedEmail;
+        response.email = normalizedEmail;
     }
 
     if (newPassword) {
@@ -72,13 +75,7 @@ async function update(req, resp) {
 
     await userModel.update(id, fields);
 
-    const user = await userModel.findById(id);
-
-    return resp.status(200).json({
-        id: user.user_id,
-        name: user.user_name,
-        email: user.user_email,
-    });
+    return resp.status(200).json(response);
 }
 
 async function verifyEmail(req, resp) {
