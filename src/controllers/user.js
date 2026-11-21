@@ -60,8 +60,8 @@ async function login(req, resp) {
 
     const token = jwt.sign(
         { id, email },
-        process.env.jwt_secret,
-        { expiresIn: process.env.jwt_expires_in}
+        process.env.JWT_SECRET,
+        { expiresIn: process.env.JWT_EXPIRES_IN}
     );
 
     return resp.status(200).json({ token });
