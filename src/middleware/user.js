@@ -61,15 +61,15 @@ async function validateUpdate(req, resp, next) {
         return resp.status(400).json({ error: "Informe ao menos um campo para atualizar." });
     }
 
-    if (name !== undefined && !name.trim()) {
+    if (name && !name.trim()) {
         return resp.status(400).json({ error: "Nome inválido." });
     }
 
-    if (email !== undefined && !/^\S+@\S+\.\S+$/.test(email)) {
+    if (email && !/^\S+@\S+\.\S+$/.test(email)) {
         return resp.status(400).json({ error: "Email inválido." });
     }
 
-    if (newPassword !== undefined) {
+    if (newPassword) {
         if (!currentPassword || !confirmNewPassword) {
             return resp.status(400).json({
                 error: "Para alterar a senha, informe a senha atual, a nova senha e a confirmação da nova senha.",

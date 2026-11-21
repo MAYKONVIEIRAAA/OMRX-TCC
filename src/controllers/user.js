@@ -51,11 +51,11 @@ async function update(req, resp) {
         return resp.status(403).json({ error: "Você só pode alterar seus próprios dados." });
     }
 
-    if (name !== undefined) {
+    if (name) {
         fields.name = name.trim();
     }
 
-    if (email !== undefined) {
+    if (email) {
         const normalizedEmail = email.trim().toLowerCase();
         const existing = await userModel.findByEmail(normalizedEmail);
 
@@ -66,7 +66,7 @@ async function update(req, resp) {
         fields.email = normalizedEmail;
     }
 
-    if (newPassword !== undefined) {
+    if (newPassword) {
         fields.passwordHash = await bcrypt.hash(newPassword, 10);
     }
 
