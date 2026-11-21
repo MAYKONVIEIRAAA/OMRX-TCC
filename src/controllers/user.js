@@ -49,7 +49,7 @@ async function update(req, resp) {
         return resp.status(403).json({ error: "Você só pode alterar seus próprios dados." });
     }
 
-    const { name, email, password } = req.body;
+    const { name, email, newPassword } = req.body;
     const fields = {};
 
     if (name !== undefined) {
@@ -67,8 +67,8 @@ async function update(req, resp) {
         fields.email = normalizedEmail;
     }
 
-    if (password !== undefined) {
-        fields.passwordHash = await bcrypt.hash(password, 10);
+    if (newPassword !== undefined) {
+        fields.passwordHash = await bcrypt.hash(newPassword, 10);
     }
 
     await userModel.update(id, fields);
