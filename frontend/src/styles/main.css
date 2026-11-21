@@ -1,7 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Bungee&family=Chakra+Petch:wght@700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap");
+
 /* ==========================================================================
    Tokens
    ========================================================================== */
 :root {
+  /* Cores (Figma - Desktop 1440px / Mobile 390px) */
   --color-navy: #272f6a;
   --color-navy-dark: #1a2050;
   --color-indigo: #3a4490;
@@ -9,22 +12,47 @@
   --color-white: #f4f4f4;
   --color-orange: #ee5a3c;
   --color-black: #000000;
+  --color-orange-15: rgba(238, 90, 60, 0.15);
   --color-error: #ff8a73;
 
+  --color-pure-white: #ffffff;
+  --color-black-20: rgba(0, 0, 0, 0.2);
+
   --color-white-80: rgba(244, 244, 244, 0.8);
+  --color-white-78: rgba(244, 244, 244, 0.78);
   --color-white-75: rgba(244, 244, 244, 0.75);
+  --color-white-70: rgba(244, 244, 244, 0.7);
   --color-white-55: rgba(244, 244, 244, 0.55);
+  --color-sky-85: rgba(185, 228, 246, 0.85);
+  --color-sky-80: rgba(185, 228, 246, 0.8);
   --color-sky-75: rgba(185, 228, 246, 0.75);
   --color-sky-70: rgba(185, 228, 246, 0.7);
+  --color-sky-60: rgba(185, 228, 246, 0.6);
   --color-sky-55: rgba(185, 228, 246, 0.55);
+  --color-sky-45: rgba(185, 228, 246, 0.45);
+  --color-sky-35: rgba(185, 228, 246, 0.35);
   --color-sky-15: rgba(185, 228, 246, 0.15);
+  --color-sky-12: rgba(185, 228, 246, 0.12);
+  --color-sky-6: rgba(185, 228, 246, 0.06);
+  --color-navy-80: rgba(39, 47, 106, 0.8);
+  --color-navy-75: rgba(39, 47, 106, 0.75);
 
+  --color-header-bg: var(--color-navy);
+  --color-header-border: var(--color-sky-15);
+  --color-footer-bg: var(--color-black);
+
+  /* Tipografia */
   --font-brand: "Bungee", sans-serif;
   --font-display: "Chakra Petch", sans-serif;
   --font-body: "Inter", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 
-  --page-gutter: 96px;
+  /* Raios */
+  --radius-md: 10px;
+  --radius-lg: 20px;
+
+  /* Espacamento lateral fluido: 96px em 1440px, 20px no mobile */
+  --page-gutter: clamp(20px, 6.67vw, 96px);
   --content-max-width: 1248px;
 }
 
@@ -42,13 +70,23 @@ html {
 }
 
 body {
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
   background-color: var(--color-navy);
   color: var(--color-white);
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
+}
+
+/* O conteudo da pagina ocupa o espaco entre header e footer */
+main {
+  flex: 1;
+}
+
+omrx-header,
+omrx-footer {
+  display: block;
 }
 
 a {
@@ -60,10 +98,19 @@ img {
   display: block;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 button,
 input {
   font: inherit;
   color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-orange);
+  outline-offset: 3px;
 }
 
 .visually-hidden {
@@ -73,162 +120,4 @@ input {
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
-}
-
-/* ==========================================================================
-   Logo
-   ========================================================================== */
-.logo {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.logo__text {
-  font-family: var(--font-brand);
-  font-size: 22px;
-  line-height: normal;
-  color: var(--color-sky);
-}
-
-/* ==========================================================================
-   Navbar
-   ========================================================================== */
-.navbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 80px;
-  padding: 0 var(--page-gutter);
-  background-color: var(--color-navy);
-  border-bottom: 1px solid var(--color-sky-15);
-}
-
-.navbar__links {
-  display: flex;
-  align-items: center;
-  gap: 36px;
-  list-style: none;
-}
-
-.navbar__link {
-  font-weight: 500;
-  font-size: 15px;
-  color: var(--color-white-80);
-  transition: color 0.15s ease;
-}
-
-.navbar__link:hover,
-.navbar__link:focus-visible {
-  color: var(--color-sky);
-}
-
-/* ==========================================================================
-   Footer
-   ========================================================================== */
-.footer {
-  display: flex;
-  justify-content: center;
-  padding: 36px var(--page-gutter);
-  background-color: var(--color-black);
-}
-
-.footer__inner {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  max-width: var(--content-max-width);
-}
-
-.footer__brand {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.footer__brand .logo__text {
-  font-size: 18px;
-}
-
-.footer__tagline {
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--color-sky-75);
-}
-
-.footer__copyright {
-  font-size: 13px;
-  color: var(--color-white-55);
-}
-
-.footer__links {
-  display: flex;
-  gap: 32px;
-  list-style: none;
-}
-
-.footer__link {
-  font-size: 14px;
-  color: var(--color-white-75);
-  transition: color 0.15s ease;
-}
-
-.footer__link:hover,
-.footer__link:focus-visible {
-  color: var(--color-sky);
-}
-
-/* ==========================================================================
-   Mobile
-   ========================================================================== */
-@media (max-width: 768px) {
-  :root {
-    --page-gutter: 20px;
-  }
-
-  .navbar {
-    height: auto;
-    padding: 12px var(--page-gutter);
-  }
-
-  .navbar .logo__mark {
-    width: 28px;
-    height: 28px;
-  }
-
-  .navbar .logo__text {
-    font-size: 20px;
-  }
-
-  /* O layout mobile do Figma nao exibe os links de navegacao */
-  .navbar__links {
-    display: none;
-  }
-
-  .footer__inner {
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .footer__brand {
-    align-items: center;
-  }
-
-  .footer__brand .logo__mark {
-    width: 24px;
-    height: 24px;
-  }
-
-  .footer__links {
-    order: 1;
-    gap: 24px;
-    padding: 12px 0 10px;
-  }
-
-  .footer__copyright {
-    order: 2;
-    text-align: center;
-  }
 }
