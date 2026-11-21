@@ -68,13 +68,9 @@ async function login(req, resp) {
 }
 
 async function update(req, resp) {
-    const id = Number(req.params.id);
+    const id = req.auth.id;
     const { name, email, newPassword } = req.body;
     const fields = {};
-
-    if (id !== req.auth.id) {
-        return resp.status(403).json({ error: "Você só pode alterar seus próprios dados." });
-    }
 
     if (name) {
         fields.name = name.trim();
