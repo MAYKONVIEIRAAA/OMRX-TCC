@@ -29,9 +29,34 @@ async function create(req, resp) {
     return resp.status(201).json({ id, name, email, emailSent })
 }
 
+async function rejectUnverifiedLogin(resp, user) {
+    try {
+        const resent = await emailVerificationService.resendIfTokenExpired(user);
+
+        if (resent) {
+            return resp.status(403).json({
+                error: EMAIL_VERIFICATION_MESSAGES.EXPIRED_RESENT,
+                code: "EMAIL_VERIFICATION_RESENT",
+            });
+        }
+
+        return resp.status(403).json({
+            error: EMAIL_VERIFICATION_MESSAGES.NOT_VERIFIED,
+            code: "EMAIL_NOT_VERIFIED",
+        });
+    } catch (error) {
+        console.error("Falha ao reenviar e-mail de verificacao no login:", error.message);
+        return resp.status(502).json({ error: EMAIL_VERIFICATION_MESSAGES.EXPIRED_RESEND_FAILED });
+    }
+}
+
 async function login(req, resp) {
     const id = req.id;
     const email = req.email;
+
+    if (!req.emailVerified) {
+        return rejectUnverifiedLogin(resp, { id, name: req.name, email });
+    }
 
     const token = jwt.sign(
         { id, email },
