@@ -60,7 +60,7 @@ async function update(req, resp) {
         const existing = await userModel.findByEmail(normalizedEmail);
 
         if (existing && existing.user_id !== id) {
-            return resp.status(409).json({ error: "O Email já existe!" });
+            return resp.status(409).json({ error: "Esse email já está em uso por outra conta." });
         }
 
         fields.email = normalizedEmail;
