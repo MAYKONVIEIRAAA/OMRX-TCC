@@ -2,10 +2,11 @@ import { API_BASE_URL, NETWORK_ERROR_STATUS } from "../config.js";
 import { HTTP_ERROR_MESSAGES } from "../messages.js";
 
 export class ApiError extends Error {
-  constructor(message, status) {
+  constructor(message, status, code) {
     super(message);
     this.name = "ApiError";
     this.status = status;
+    this.code = code;
   }
 }
 
@@ -29,10 +30,18 @@ async function sendRequest(path, options) {
   const responseBody = await readJsonBody(response);
 
   if (!response.ok) {
-    throw new ApiError(responseBody.error || HTTP_ERROR_MESSAGES.unknown, response.status);
+    throw new ApiError(
+      responseBody.error || HTTP_ERROR_MESSAGES.unknown,
+      response.status,
+      responseBody.code
+    );
   }
 
   return responseBody;
+}
+
+export function getJson(path) {
+  return sendRequest(path, { method: "GET" });
 }
 
 export function postJson(path, requestBody) {
