@@ -4,6 +4,7 @@ export const PAGES = {
   faq: "/pages/faq.html",
   developers: "/pages/desenvolvedores.html",
   securityTips: "/pages/dicas-de-seguranca.html",
+  checkLink: "/pages/verificar-link.html",
   login: "/pages/login.html",
   register: "/pages/cadastro.html",
   emailSent: "/pages/email-enviado.html",
@@ -16,6 +17,7 @@ export const PAGES = {
 
 const EMAIL_QUERY_PARAM = "email";
 const TOKEN_QUERY_PARAM = "token";
+const LINK_QUERY_PARAM = "url";
 
 function getQueryParam(queryString, paramName) {
   return new URLSearchParams(queryString).get(paramName)?.trim() || null;
@@ -24,6 +26,11 @@ function getQueryParam(queryString, paramName) {
 export function buildEmailSentUrl(email) {
   const queryString = new URLSearchParams({ [EMAIL_QUERY_PARAM]: email });
   return `${PAGES.emailSent}?${queryString}`;
+}
+
+export function buildCheckLinkUrl(link) {
+  const queryString = new URLSearchParams({ [LINK_QUERY_PARAM]: link });
+  return `${PAGES.checkLink}?${queryString}`;
 }
 
 export function getEmailFromQueryString(queryString) {
