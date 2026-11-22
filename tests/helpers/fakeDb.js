@@ -41,6 +41,18 @@ function createFakeDb() {
       return [user ? [{ ...user }] : []];
     }
 
+    if (q.startsWith("UPDATE users SET user_name = COALESCE")) {
+      const [name, email, passwordHash, resetVerification, id] = params;
+      const user = state.users.find((u) => u.user_id === id);
+      if (user) {
+        if (name !== null) user.user_name = name;
+        if (email !== null) user.user_email = email;
+        if (passwordHash !== null) user.senha_hash = passwordHash;
+        if (resetVerification) user.user_email_verified_at = null;
+      }
+      return [{ affectedRows: user ? 1 : 0 }];
+    }
+
     if (q.startsWith("UPDATE users SET user_email_verified_at")) {
       const user = state.users.find((u) => u.user_id === params[0]);
       if (user) user.user_email_verified_at = new Date();

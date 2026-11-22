@@ -36,6 +36,13 @@ async function findById(id) {
     return rows[0];
 }
 
+async function update(id, fields, resetVerification = false) {
+    await pool.execute(
+        "UPDATE users SET user_name = COALESCE(?, user_name), user_email = COALESCE(?, user_email), senha_hash = COALESCE(?, senha_hash), user_email_verified_at = CASE WHEN ? THEN NULL ELSE user_email_verified_at END WHERE user_id = ?",
+        [fields.name ?? null, fields.email ?? null, fields.passwordHash ?? null, resetVerification ? 1 : 0, id]
+    );
+}
+
 async function remove(id) {
     await pool.execute(
         "DELETE FROM users WHERE user_id = ?",
@@ -50,4 +57,4 @@ async function markEmailAsVerified(userId) {
     );
 }
 
-module.exports = { create, findByEmail, findOneByEmail, findById, remove, markEmailAsVerified };
+module.exports = { create, findByEmail, findOneByEmail, findById, update, remove, markEmailAsVerified };

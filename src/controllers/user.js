@@ -67,6 +67,58 @@ async function login(req, resp) {
     return resp.status(200).json({ token });
 }
 
+async function update(req, resp) {
+    const id = req.auth.id;
+    const { name, email, newPassword } = req.body;
+    const fields = {};
+    let emailChanged = false;
+    let currentUser = null;
+
+    if (name) {
+        fields.name = name.trim();
+    }
+
+    if (email) {
+        const normalizedEmail = email.trim().toLowerCase();
+        const existing = await userModel.findByEmail(normalizedEmail);
+
+        if (existing && existing.user_id !== id) {
+            return resp.status(409).json({ error: "Esse email já está em uso por outra conta." });
+        }
+
+        currentUser = await userModel.findById(id);
+        emailChanged = currentUser.user_email !== normalizedEmail;
+        fields.email = normalizedEmail;
+    }
+
+    if (newPassword) {
+        fields.passwordHash = await bcrypt.hash(newPassword, 10);
+    }
+
+    await userModel.update(id, fields, emailChanged);
+
+    const response = { id };
+
+    if (emailChanged) {
+        let emailSent = true;
+
+        try {
+            await emailVerificationService.sendVerificationEmail({
+                id,
+                name: fields.name ?? currentUser.user_name,
+                email: fields.email,
+            });
+        } catch (error) {
+            console.error("Falha ao enviar e-mail de verificacao:", error.message);
+            emailSent = false;
+        }
+
+        response.emailSent = emailSent;
+    }
+
+    return resp.status(200).json(response);
+}
+
 async function remove(req, resp) {
     try {
         await userModel.remove(req.auth.id);
@@ -104,4 +156,4 @@ async function resendVerification(req, resp) {
     return resp.status(200).json({ message: EMAIL_VERIFICATION_MESSAGES.RESEND_ACCEPTED });
 }
 
-module.exports = { create, login, remove, verifyEmail, resendVerification }
+module.exports = { create, login, update, remove, verifyEmail, resendVerification }
