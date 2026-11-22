@@ -1,7 +1,7 @@
 function validateForgotPassword(req, resp, next) {
   const { email } = req.body ?? {};
 
-  if (typeof email !== "string" || !/^\S+@\S+\.\S+$/.test(email.trim())) {
+  if (!email || typeof email !== "string" || !/^\S+@\S+\.\S+$/.test(email.trim())) {
     return resp.status(400).json({ error: "Email inválido." });
   }
 
