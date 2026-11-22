@@ -129,6 +129,18 @@ describe("PUT /change — atualizacao de dados do usuario", () => {
     );
   });
 
+  it("Deve resetar a verificacao de email e enviar um novo email de confirmacao quando o email muda", async () => {
+    const token = await loginToken();
+    const res = await put({ email: "trocado@exemplo.com" }, bearer(token));
+
+    assert.equal(res.status, 200);
+    assert.equal(res.body.emailSent, true);
+    assert.equal(db.users()[0].user_email_verified_at, null);
+
+    const lastMail = h.mail.sent[h.mail.sent.length - 1];
+    assert.equal(lastMail.to, "trocado@exemplo.com");
+  });
+
   it("Deve trocar a senha com sucesso quando os 3 campos sao validos", async () => {
     const token = await loginToken();
 

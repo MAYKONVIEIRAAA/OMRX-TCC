@@ -71,6 +71,8 @@ async function update(req, resp) {
     const id = req.auth.id;
     const { name, email, newPassword } = req.body;
     const fields = {};
+    let emailChanged = false;
+    let currentUser = null;
 
     if (name) {
         fields.name = name.trim();
@@ -84,6 +86,8 @@ async function update(req, resp) {
             return resp.status(409).json({ error: "Esse email já está em uso por outra conta." });
         }
 
+        currentUser = await userModel.findById(id);
+        emailChanged = currentUser.user_email !== normalizedEmail;
         fields.email = normalizedEmail;
     }
 
@@ -91,9 +95,28 @@ async function update(req, resp) {
         fields.passwordHash = await bcrypt.hash(newPassword, 10);
     }
 
-    await userModel.update(id, fields);
+    await userModel.update(id, fields, emailChanged);
 
-    return resp.status(200).json({ id });
+    const response = { id };
+
+    if (emailChanged) {
+        let emailSent = true;
+
+        try {
+            await emailVerificationService.sendVerificationEmail({
+                id,
+                name: fields.name ?? currentUser.user_name,
+                email: fields.email,
+            });
+        } catch (error) {
+            console.error("Falha ao enviar e-mail de verificacao:", error.message);
+            emailSent = false;
+        }
+
+        response.emailSent = emailSent;
+    }
+
+    return resp.status(200).json(response);
 }
 
 async function verifyEmail(req, resp) {
