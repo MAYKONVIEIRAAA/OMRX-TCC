@@ -44,12 +44,20 @@ export function getJson(path, headers = {}) {
   return sendRequest(path, { method: "GET", headers });
 }
 
-export function postJson(path, requestBody) {
+function sendJson(method, path, requestBody, headers = {}) {
   return sendRequest(path, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
+    method,
+    headers: { "Content-Type": "application/json", ...headers },
     body: JSON.stringify(requestBody),
   });
+}
+
+export function postJson(path, requestBody) {
+  return sendJson("POST", path, requestBody);
+}
+
+export function putJson(path, requestBody, headers = {}) {
+  return sendJson("PUT", path, requestBody, headers);
 }
 
 export function getErrorMessage(error, fallbackMessage) {

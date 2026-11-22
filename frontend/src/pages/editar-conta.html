@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editar dados da conta | OMRX</title>
+
+    <link rel="icon" type="image/png" href="/assets/images/logo-omrx.png" />
+    <link rel="stylesheet" href="/styles/main.css" />
+    <link rel="stylesheet" href="/styles/components/header.css" />
+    <link rel="stylesheet" href="/styles/components/footer.css" />
+    <link rel="stylesheet" href="/styles/components.css" />
+    <link rel="stylesheet" href="/styles/account.css" />
+    <link rel="stylesheet" href="/styles/edit-account.css" />
+    <script type="module" src="/scripts/components/omrx-header.js"></script>
+    <script type="module" src="/scripts/components/omrx-footer.js"></script>
+    <script type="module" src="/scripts/pages/editar-conta.js"></script>
+  </head>
+  <body>
+    <omrx-header></omrx-header>
+
+    <main class="account account--edit">
+      <div class="account__inner">
+        <a class="account-back" href="/pages/minha-conta.html">
+          <span aria-hidden="true">←</span> Voltar para Minha conta
+        </a>
+
+        <header class="account__header">
+          <p class="account__eyebrow">Editar conta</p>
+          <h1 class="account__title">Editar dados da conta</h1>
+          <p class="account__subtitle">
+            Atualize seu nome, e-mail ou senha. As mudanças só valem depois de salvar.
+          </p>
+        </header>
+
+        <form class="account-card edit-account" id="edit-account-form" aria-busy="true" novalidate>
+          <!-- Desabilitado ate os dados atuais da conta carregarem -->
+          <fieldset class="edit-account__fieldset" id="edit-account-fields" disabled>
+            <div class="edit-account__body">
+              <section class="edit-account__group" aria-labelledby="info-pessoais-titulo">
+                <h2 class="edit-account__group-title" id="info-pessoais-titulo">
+                  Informações pessoais
+                </h2>
+
+                <div class="form-field">
+                  <label class="form-field__label" for="name">Nome</label>
+                  <input
+                    class="form-field__input"
+                    id="name"
+                    name="name"
+                    type="text"
+                    autocomplete="name"
+                    aria-describedby="name-error"
+                    required
+                  />
+                  <p class="form-field__error" id="name-error" aria-live="polite"></p>
+                </div>
+
+                <div class="form-field">
+                  <label class="form-field__label" for="email">E-mail</label>
+                  <input
+                    class="form-field__input"
+                    id="email"
+                    name="email"
+                    type="email"
+                    autocomplete="email"
+                    aria-describedby="email-error email-hint"
+                    required
+                  />
+                  <p class="form-field__error" id="email-error" aria-live="polite"></p>
+                  <p class="edit-account__hint" id="email-hint">
+                    Se você alterar o e-mail, enviaremos um link de confirmação para o novo
+                    endereço.
+                  </p>
+                </div>
+              </section>
+
+              <div class="edit-account__divider" aria-hidden="true"></div>
+
+              <section class="edit-account__group" aria-labelledby="alterar-senha-titulo">
+                <h2 class="edit-account__group-title" id="alterar-senha-titulo">Alterar senha</h2>
+
+                <div class="form-field">
+                  <label class="form-field__label" for="current-password">Senha atual</label>
+                  <input
+                    class="form-field__input"
+                    id="current-password"
+                    name="currentPassword"
+                    type="password"
+                    placeholder="Digite sua senha atual"
+                    autocomplete="current-password"
+                    aria-describedby="current-password-error current-password-hint"
+                  />
+                  <p class="form-field__error" id="current-password-error" aria-live="polite"></p>
+                  <p class="edit-account__hint" id="current-password-hint">
+                    Necessária para salvar mudanças de e-mail ou senha.
+                  </p>
+                </div>
+
+                <div class="form-field">
+                  <label class="form-field__label" for="new-password">Nova senha</label>
+                  <input
+                    class="form-field__input"
+                    id="new-password"
+                    name="newPassword"
+                    type="password"
+                    placeholder="Mínimo de 8 caracteres"
+                    autocomplete="new-password"
+                    aria-describedby="new-password-error"
+                  />
+                  <p class="form-field__error" id="new-password-error" aria-live="polite"></p>
+                </div>
+
+                <div class="form-field">
+                  <label class="form-field__label" for="confirm-new-password">
+                    Confirmar nova senha
+                  </label>
+                  <input
+                    class="form-field__input"
+                    id="confirm-new-password"
+                    name="confirmNewPassword"
+                    type="password"
+                    placeholder="Repita a nova senha"
+                    autocomplete="new-password"
+                    aria-describedby="confirm-new-password-error"
+                  />
+                  <p
+                    class="form-field__error"
+                    id="confirm-new-password-error"
+                    aria-live="polite"
+                  ></p>
+                </div>
+              </section>
+            </div>
+
+            <div class="edit-account__actions">
+              <p class="form-status edit-account__status" id="form-status" role="status"></p>
+              <p class="edit-account__note">As mudanças entram em vigor depois de salvar.</p>
+              <a class="button-secondary" href="/pages/minha-conta.html">Cancelar</a>
+              <button class="button-primary edit-account__submit" type="submit">
+                Salvar alterações
+              </button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </main>
+
+    <omrx-footer></omrx-footer>
+  </body>
+</html>
