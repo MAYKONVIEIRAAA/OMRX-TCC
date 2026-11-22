@@ -24,6 +24,7 @@ router.put("/change", authMiddleware.auth, userMiddleware.validateUpdate, userCo
 router.post("/users/verify-email", userController.verifyEmail);
 router.post("/users/resend-verification", userMiddleware.validateResendVerification, userController.resendVerification);
 router.delete("/delete", authMiddleware.auth, userMiddleware.validateDeleteAccount, userController.remove);
+router.get("/account", authMiddleware.auth, userController.getAccount);
 
 router.post("/password/forgot", passwordResetMiddleware.validateForgotPassword, passwordResetController.forgot);
 router.post("/password/reset", passwordResetMiddleware.validateResetPassword, passwordResetController.reset);

@@ -22,6 +22,7 @@ function createFakeDb() {
         user_email: email,
         senha_hash: hash,
         user_email_verified_at: null,
+        user_created_at: new Date(),
       };
       state.users.push(row);
       return [{ insertId: row.user_id }];
