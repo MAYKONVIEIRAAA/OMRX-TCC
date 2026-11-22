@@ -26,8 +26,8 @@ router.post("/users/resend-verification", userMiddleware.validateResendVerificat
 router.delete("/delete", authMiddleware.auth, userMiddleware.validateDeleteAccount, userController.remove);
 router.get("/account", authMiddleware.auth, userController.getAccount);
 
-router.post("/password/forgot", passwordResetMiddleware.validateForgotPassword, passwordResetController.forgot);
-router.post("/password/reset", passwordResetMiddleware.validateResetPassword, passwordResetController.reset);
+router.post("/forgot-password", passwordResetMiddleware.validateForgotPassword, passwordResetController.forgot);
+router.post("/reset-password", passwordResetMiddleware.validateResetPassword, passwordResetController.reset);
 
 router.post("/urls/check", authMiddleware.auth, urlCheckCredentialsMiddleware, urlCheckMiddleware.validateUrl, urlCheckController.start);
 router.get("/urls/check/:scanId", authMiddleware.auth, urlCheckCredentialsMiddleware, urlCheckController.result);

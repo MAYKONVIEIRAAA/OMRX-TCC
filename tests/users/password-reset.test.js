@@ -6,15 +6,15 @@ const { request, db, loginToken, defaultUser, expectResponse } = h;
 
 h.useServer();
 
-const forgot = (body) => request("POST", "/password/forgot", { body });
-const reset = (body) => request("POST", "/password/reset", { body });
+const forgot = (body) => request("POST", "/forgot-password", { body });
+const reset = (body) => request("POST", "/reset-password", { body });
 
 function extractToken(mail) {
   const match = mail.text.match(/token=([a-f0-9]+)/);
   return match && match[1];
 }
 
-describe("POST /password/forgot — solicitacao de redefinicao de senha", () => {
+describe("POST /forgot-password — solicitacao de redefinicao de senha", () => {
   it("Deve responder 200 e enviar um email quando a conta existe", async () => {
     await loginToken();
 
@@ -74,7 +74,7 @@ describe("POST /password/forgot — solicitacao de redefinicao de senha", () => 
   });
 });
 
-describe("POST /password/reset — redefinicao de senha", () => {
+describe("POST /reset-password — redefinicao de senha", () => {
   it("Deve responder 400 quando o token nao e enviado", async () => {
     expectResponse(
       await reset({ newPassword: "novaSenha123", confirmNewPassword: "novaSenha123" }),
