@@ -21,6 +21,7 @@ router.put("/change", authMiddleware.auth, userMiddleware.validateUpdate, userCo
 router.post("/users/verify-email", userController.verifyEmail);
 router.post("/users/resend-verification", userMiddleware.validateResendVerification, userController.resendVerification);
 router.delete("/delete", authMiddleware.auth, userMiddleware.validateDeleteAccount, userController.remove);
+router.get("/account", authMiddleware.auth, userController.getAccount);
 
 router.post("/urls/check", authMiddleware.auth, urlCheckCredentialsMiddleware, urlCheckMiddleware.validateUrl, urlCheckController.start);
 router.get("/urls/check/:scanId", authMiddleware.auth, urlCheckCredentialsMiddleware, urlCheckController.result);

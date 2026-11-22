@@ -156,4 +156,18 @@ async function resendVerification(req, resp) {
     return resp.status(200).json({ message: EMAIL_VERIFICATION_MESSAGES.RESEND_ACCEPTED });
 }
 
-module.exports = { create, login, update, remove, verifyEmail, resendVerification }
+async function getAccount(req, resp) {
+    const user = await userModel.findById(req.auth.id);
+
+    if (!user) {
+        return resp.status(404).json({ error: "Conta não encontrada." });
+    }
+
+    return resp.status(200).json({
+        name: user.user_name,
+        email: user.user_email,
+        createdAt: user.user_created_at,
+    });
+}
+
+module.exports = { create, login, update, remove, verifyEmail, resendVerification, getAccount }
