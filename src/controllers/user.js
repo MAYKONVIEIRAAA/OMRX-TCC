@@ -72,7 +72,6 @@ async function remove(req, resp) {
         await userModel.remove(req.auth.id);
         return resp.status(204).send();
     } catch (error) {
-        console.error("Erro ao excluir usuario:", error.message);
         return resp.status(500).json({ error: "Nao foi possivel excluir sua conta. Tente novamente mais tarde." });
     }
 }
