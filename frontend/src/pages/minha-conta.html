@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Minha conta | OMRX</title>
+
+    <link rel="icon" type="image/png" href="/assets/images/logo-omrx.png" />
+    <link rel="stylesheet" href="/styles/main.css" />
+    <link rel="stylesheet" href="/styles/components/header.css" />
+    <link rel="stylesheet" href="/styles/components/footer.css" />
+    <link rel="stylesheet" href="/styles/components.css" />
+    <link rel="stylesheet" href="/styles/account.css" />
+    <script type="module" src="/scripts/components/omrx-header.js"></script>
+    <script type="module" src="/scripts/components/omrx-footer.js"></script>
+    <script type="module" src="/scripts/pages/minha-conta.js"></script>
+  </head>
+  <body>
+    <omrx-header></omrx-header>
+
+    <main class="account">
+      <div class="account__inner">
+        <header class="account__header">
+          <p class="account__eyebrow">Minha conta</p>
+          <h1 class="account__title">Dados da conta</h1>
+          <p class="account__subtitle">Veja e atualize as informações da sua conta.</p>
+        </header>
+
+        <p class="form-status account__status" id="account-status" role="alert"></p>
+
+        <div class="account-card account-data" id="account-data" aria-busy="true">
+          <div class="account-data__head" aria-hidden="true">
+            <span>Campo</span>
+            <span>Valor</span>
+          </div>
+
+          <dl class="account-data__list">
+            <div class="account-data__row">
+              <dt class="account-data__label">Nome</dt>
+              <dd class="account-data__value" id="account-name">—</dd>
+              <dd class="account-data__action">
+                <a class="account-data__link" href="/pages/editar-conta.html">
+                  Editar<span class="visually-hidden"> nome</span>
+                </a>
+              </dd>
+            </div>
+
+            <div class="account-data__row">
+              <dt class="account-data__label">E-mail</dt>
+              <dd class="account-data__value" id="account-email">—</dd>
+              <dd class="account-data__action">
+                <a class="account-data__link" href="/pages/editar-conta.html">
+                  Editar<span class="visually-hidden"> e-mail</span>
+                </a>
+              </dd>
+            </div>
+
+            <div class="account-data__row">
+              <dt class="account-data__label">Senha</dt>
+              <dd class="account-data__value">
+                <span aria-hidden="true">••••••••••••</span>
+                <span class="visually-hidden">Oculta</span>
+              </dd>
+              <dd class="account-data__action">
+                <a class="account-data__link" href="/pages/editar-conta.html">
+                  Alterar<span class="visually-hidden"> senha</span>
+                </a>
+              </dd>
+            </div>
+
+            <div class="account-data__row">
+              <dt class="account-data__label">Conta criada em</dt>
+              <dd class="account-data__value" id="account-created-at">—</dd>
+            </div>
+          </dl>
+        </div>
+
+        <section class="account__section" aria-labelledby="privacidade-titulo">
+          <h2 class="account__section-title" id="privacidade-titulo">Dados e privacidade</h2>
+
+          <div class="account-card account-danger">
+            <div class="account-danger__info">
+              <h3 class="account-danger__title">Excluir conta</h3>
+              <p class="account-danger__text">Apaga sua conta. Essa ação não pode ser desfeita.</p>
+            </div>
+            <a class="account-danger__button" href="/pages/excluir-conta.html">Excluir conta</a>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <omrx-footer></omrx-footer>
+  </body>
+</html>

@@ -26,6 +26,10 @@ export const RESEND_EMAIL_MESSAGES = {
   unexpectedError: "Não foi possível reenviar o e-mail. Tente novamente.",
 };
 
+export const ACCOUNT_MESSAGES = {
+  unexpectedError: "Não foi possível carregar os dados da sua conta. Tente novamente.",
+};
+
 export const VERIFY_EMAIL_MESSAGES = {
   invalidLink: "Link de verificação inválido ou já utilizado.",
   unexpectedError: "Não foi possível confirmar seu e-mail. Tente novamente.",

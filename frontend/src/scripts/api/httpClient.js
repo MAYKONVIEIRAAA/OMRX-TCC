@@ -40,8 +40,8 @@ async function sendRequest(path, options) {
   return responseBody;
 }
 
-export function getJson(path) {
-  return sendRequest(path, { method: "GET" });
+export function getJson(path, headers = {}) {
+  return sendRequest(path, { method: "GET", headers });
 }
 
 export function postJson(path, requestBody) {
