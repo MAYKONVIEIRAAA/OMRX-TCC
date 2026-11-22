@@ -66,17 +66,20 @@ function validateResendVerification(req, resp, next) {
     next();
 }
 
-function validateDeleteAccount(req, resp, next) {
-    const { email, confirmDeletion } = req.body;
+async function validateDeleteAccount(req, resp, next) {
+    const { currentPassword, confirmDeletion } = req.body;
 
-    if (!email || !confirmDeletion) {
+    if (!currentPassword || !confirmDeletion) {
         return resp.status(400).json({
-            error: "Confirme a exclusão informando seu email e marcando a caixa de confirmação.",
+            error: "Confirme a exclusão informando sua senha atual e marcando a caixa de confirmação.",
         });
     }
 
-    if (email.trim().toLowerCase() !== req.auth.email.toLowerCase()) {
-        return resp.status(403).json({ error: "O email informado não é o mesmo da conta logada." });
+    const user = await UserModel.findById(req.auth.id);
+    const isPasswordValid = user ? await bcrypt.compare(currentPassword, user.senha_hash) : false;
+
+    if (!isPasswordValid) {
+        return resp.status(401).json({ error: "Senha atual incorreta." });
     }
 
     next();

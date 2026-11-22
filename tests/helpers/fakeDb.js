@@ -36,6 +36,11 @@ function createFakeDb() {
       return [user ? [{ ...user }] : []];
     }
 
+    if (q.startsWith("SELECT * FROM users WHERE user_id")) {
+      const user = state.users.find((u) => u.user_id === params[0]);
+      return [user ? [{ ...user }] : []];
+    }
+
     if (q.startsWith("UPDATE users SET user_email_verified_at")) {
       const user = state.users.find((u) => u.user_id === params[0]);
       if (user) user.user_email_verified_at = new Date();
