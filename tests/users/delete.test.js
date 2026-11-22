@@ -44,22 +44,19 @@ describe("DELETE /delete — exclusao de conta do usuario", () => {
     const token = await loginToken();
     expectResponse(
       await del({ email: "outro@exemplo.com", confirmDeletion: true }, bearer(token)),
-      { status: 403, body: { error: "O email informado não confere com a conta autenticada." } }
+      { status: 403, body: { error: "O email informado não é o mesmo da conta logada." } }
     );
   });
 
   it("Deve aceitar o email em maiusculas/minusculas diferentes do cadastro", async () => {
     const token = await loginToken();
     const res = await del({ email: defaultUser.email.toUpperCase(), confirmDeletion: true }, bearer(token));
-
     assert.equal(res.status, 204);
   });
 
   it("Deve responder 204 e remover o usuario do banco", async () => {
     const token = await loginToken();
-
     const res = await del({ email: defaultUser.email, confirmDeletion: true }, bearer(token));
-
     assert.equal(res.status, 204);
     assert.equal(db.users().length, 0);
   });
@@ -67,22 +64,18 @@ describe("DELETE /delete — exclusao de conta do usuario", () => {
   it("Nao deve remover o usuario quando a validacao falha", async () => {
     const token = await loginToken();
     await del({ email: "outro@exemplo.com", confirmDeletion: true }, bearer(token));
-
     assert.equal(db.users().length, 1);
   });
 
   it("Deve responder 500 quando ocorre um erro ao excluir no banco", async (t) => {
     t.mock.method(console, "error", () => {});
     const token = await loginToken();
-
     const originalExecute = db.pool.execute;
     db.pool.execute = async () => {
       throw new Error("falha de conexao com o banco");
     };
-
     try {
       const res = await del({ email: defaultUser.email, confirmDeletion: true }, bearer(token));
-
       expectResponse(res, {
         status: 500,
         body: { error: "Nao foi possivel excluir sua conta. Tente novamente mais tarde." },

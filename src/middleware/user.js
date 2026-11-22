@@ -76,7 +76,7 @@ function validateDeleteAccount(req, resp, next) {
     }
 
     if (email.trim().toLowerCase() !== req.auth.email.toLowerCase()) {
-        return resp.status(403).json({ error: "O email informado não confere com a conta autenticada." });
+        return resp.status(403).json({ error: "O email informado não é o mesmo da conta logada." });
     }
 
     next();
