@@ -36,10 +36,21 @@ function createFakeDb() {
       return [user ? [{ ...user }] : []];
     }
 
+    if (q.startsWith("SELECT * FROM users WHERE user_id")) {
+      const user = state.users.find((u) => u.user_id === params[0]);
+      return [user ? [{ ...user }] : []];
+    }
+
     if (q.startsWith("UPDATE users SET user_email_verified_at")) {
       const user = state.users.find((u) => u.user_id === params[0]);
       if (user) user.user_email_verified_at = new Date();
       return [{ affectedRows: user ? 1 : 0 }];
+    }
+
+    if (q.startsWith("DELETE FROM users WHERE user_id")) {
+      const before = state.users.length;
+      state.users = state.users.filter((u) => u.user_id !== params[0]);
+      return [{ affectedRows: before - state.users.length }];
     }
 
     if (q.startsWith("INSERT INTO email_verification_tokens")) {
