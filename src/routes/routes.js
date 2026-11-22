@@ -10,6 +10,9 @@ const verifyController = require("../controllers/verify");
 
 const statsController = require("../controllers/stats");
 
+const passwordResetMiddleware = require("../middleware/passwordReset");
+const passwordResetController = require("../controllers/passwordReset");
+
 const authMiddleware = require("../middleware/auth");
 const { urlCheckCredentialsMiddleware } = require("../middleware/urlCheckCredentials");
 
@@ -21,6 +24,9 @@ router.put("/change", authMiddleware.auth, userMiddleware.validateUpdate, userCo
 router.post("/users/verify-email", userController.verifyEmail);
 router.post("/users/resend-verification", userMiddleware.validateResendVerification, userController.resendVerification);
 router.delete("/delete", authMiddleware.auth, userMiddleware.validateDeleteAccount, userController.remove);
+
+router.post("/password/forgot", passwordResetMiddleware.validateForgotPassword, passwordResetController.forgot);
+router.post("/password/reset", passwordResetMiddleware.validateResetPassword, passwordResetController.reset);
 
 router.post("/urls/check", authMiddleware.auth, urlCheckCredentialsMiddleware, urlCheckMiddleware.validateUrl, urlCheckController.start);
 router.get("/urls/check/:scanId", authMiddleware.auth, urlCheckCredentialsMiddleware, urlCheckController.result);
