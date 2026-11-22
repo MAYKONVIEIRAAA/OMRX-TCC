@@ -119,6 +119,15 @@ async function update(req, resp) {
     return resp.status(200).json(response);
 }
 
+async function remove(req, resp) {
+    try {
+        await userModel.remove(req.auth.id);
+        return resp.status(204).send();
+    } catch (error) {
+        return resp.status(500).json({ error: "Nao foi possivel excluir sua conta. Tente novamente mais tarde." });
+    }
+}
+
 async function verifyEmail(req, resp) {
     try {
         await emailVerificationService.verifyEmail(req.body?.token);
@@ -147,4 +156,4 @@ async function resendVerification(req, resp) {
     return resp.status(200).json({ message: EMAIL_VERIFICATION_MESSAGES.RESEND_ACCEPTED });
 }
 
-module.exports = { create, login, update, verifyEmail, resendVerification }
+module.exports = { create, login, update, remove, verifyEmail, resendVerification }

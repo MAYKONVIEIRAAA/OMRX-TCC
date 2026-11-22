@@ -109,4 +109,23 @@ function validateResendVerification(req, resp, next) {
     next();
 }
 
-module.exports = { validateRegister, validateLogin, validateUpdate, validateResendVerification };
+async function validateDeleteAccount(req, resp, next) {
+    const { currentPassword, confirmDeletion } = req.body;
+
+    if (!currentPassword || !confirmDeletion) {
+        return resp.status(400).json({
+            error: "Confirme a exclusão informando sua senha atual e marcando a caixa de confirmação.",
+        });
+    }
+
+    const user = await UserModel.findById(req.auth.id);
+    const isPasswordValid = user ? await bcrypt.compare(currentPassword, user.senha_hash) : false;
+
+    if (!isPasswordValid) {
+        return resp.status(401).json({ error: "Senha atual incorreta." });
+    }
+
+    next();
+}
+
+module.exports = { validateRegister, validateLogin, validateUpdate, validateResendVerification, validateDeleteAccount };

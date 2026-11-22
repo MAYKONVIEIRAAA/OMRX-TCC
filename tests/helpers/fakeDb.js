@@ -59,6 +59,12 @@ function createFakeDb() {
       return [{ affectedRows: user ? 1 : 0 }];
     }
 
+    if (q.startsWith("DELETE FROM users WHERE user_id")) {
+      const before = state.users.length;
+      state.users = state.users.filter((u) => u.user_id !== params[0]);
+      return [{ affectedRows: before - state.users.length }];
+    }
+
     if (q.startsWith("INSERT INTO email_verification_tokens")) {
       const [userId, tokenHash, hours] = params;
       const now = Date.now();

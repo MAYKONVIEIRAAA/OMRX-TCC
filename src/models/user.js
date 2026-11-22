@@ -43,6 +43,13 @@ async function update(id, fields, resetVerification = false) {
     );
 }
 
+async function remove(id) {
+    await pool.execute(
+        "DELETE FROM users WHERE user_id = ?",
+        [id]
+    );
+}
+
 async function markEmailAsVerified(userId) {
     await pool.execute(
         "UPDATE users SET user_email_verified_at = NOW() WHERE user_id = ?",
@@ -50,4 +57,4 @@ async function markEmailAsVerified(userId) {
     );
 }
 
-module.exports = { create, findByEmail, findOneByEmail, findById, update, markEmailAsVerified };
+module.exports = { create, findByEmail, findOneByEmail, findById, update, remove, markEmailAsVerified };
