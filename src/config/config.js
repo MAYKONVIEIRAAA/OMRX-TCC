@@ -38,12 +38,16 @@ module.exports = {
     VERIFY_PAGE_PATH: "/pages/verificar-email.html",
   },
   EMAIL_VERIFICATION_MESSAGES: {
-    INVALID_TOKEN: "Link de verificacao invalido ou ja utilizado.",
-    EXPIRED_TOKEN: "Este link de verificacao expirou. Solicite um novo.",
-    VERIFIED: "E-mail confirmado com sucesso! Voce ja pode entrar.",
+    INVALID_TOKEN: "Link de verificação inválido ou já utilizado.",
+    EXPIRED_TOKEN: "Este link de verificação expirou. Solicite um novo.",
+    VERIFIED: "E-mail confirmado com sucesso! Você já pode entrar.",
     RESEND_ACCEPTED:
-      "Se houver uma conta pendente de verificacao com esse e-mail, enviaremos um novo link.",
-    SEND_FAILED: "Nao foi possivel enviar o e-mail de verificacao. Tente novamente mais tarde.",
+      "Se houver uma conta pendente de verificação com esse e-mail, enviaremos um novo link.",
+    SEND_FAILED: "Não foi possível enviar o e-mail de verificação. Tente novamente mais tarde.",
     NOT_VERIFIED: "Confirme seu e-mail antes de entrar. Verifique sua caixa de entrada.",
+    EXPIRED_RESENT:
+      "Seu link de confirmação de email expirou. Enviamos um novo link para o seu e-mail.",
+    EXPIRED_RESEND_FAILED:
+      "Seu link de confirmação de email expirou e não conseguimos enviar um novo agora. Tente novamente mais tarde.",
   },
 };

@@ -64,6 +64,12 @@ function createFakeDb() {
       ];
     }
 
+    if (q.startsWith("SELECT 1 FROM email_verification_tokens")) {
+      const now = new Date();
+      const active = state.tokens.some((t) => t.user_id === params[0] && t.expires_at > now);
+      return [active ? [{ 1: 1 }] : []];
+    }
+
     if (q.startsWith("SELECT TIMESTAMPDIFF")) {
       const rows = state.tokens.filter((t) => t.user_id === params[0]);
       const seconds = rows.length
