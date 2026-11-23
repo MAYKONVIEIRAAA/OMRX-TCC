@@ -22,9 +22,6 @@
   color: var(--color-white-78);
 }
 
-/* --------------------------------------------------------------------------
-   Lista de perguntas: faixa clara no desktop
-   -------------------------------------------------------------------------- */
 .faq {
   padding: 56px var(--page-gutter) 72px;
   background-color: var(--color-white);
@@ -57,17 +54,15 @@
   gap: 12px;
 }
 
-/* --------------------------------------------------------------------------
-   Pergunta (details/summary: abre e fecha sem JavaScript)
-   -------------------------------------------------------------------------- */
 .faq-item {
   background-color: #ffffff;
   border: 1.5px solid var(--color-sky);
   border-radius: 12px;
+  overflow: hidden; /* necessario para a animacao de altura */
   transition: border-color 0.15s ease;
 }
 
-.faq-item[open] {
+.faq-item[open]:not([data-closing]) {
   border-color: var(--color-orange);
 }
 
@@ -84,6 +79,10 @@
   color: var(--color-navy);
   cursor: pointer;
   list-style: none;
+}
+
+.faq-item__question:focus-visible {
+  outline-offset: -2px;
 }
 
 /* Remove o triangulo padrao do navegador */
@@ -103,7 +102,7 @@
   color: var(--color-navy);
 }
 
-.faq-item[open] > .faq-item__question::after {
+.faq-item[open]:not([data-closing]) > .faq-item__question::after {
   content: "\2212";
   content: "\2212" / "";
   color: var(--color-orange);
@@ -137,7 +136,6 @@
     line-height: 24px;
   }
 
-  /* No mobile a lista fica sobre o fundo navy, com titulos de grupo brancos */
   .faq {
     padding: 24px var(--page-gutter) 56px;
     background-color: transparent;
