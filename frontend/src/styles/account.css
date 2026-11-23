@@ -16,6 +16,19 @@
   margin-inline: auto;
 }
 
+/* Link "Voltar para Minha conta" das telas internas da conta */
+.account-back {
+  align-self: flex-start;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--color-sky);
+}
+
+.account-back:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 /* --------------------------------------------------------------------------
    Cabecalho
    -------------------------------------------------------------------------- */

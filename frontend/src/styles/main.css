@@ -16,10 +16,13 @@
   --color-error: #ff8a73;
   --color-danger: #e5384f;
   --color-danger-12: rgba(229, 56, 79, 0.12);
+  --color-danger-45: rgba(229, 56, 79, 0.45);
+  --color-danger-60: rgba(229, 56, 79, 0.6);
 
   --color-pure-white: #ffffff;
   --color-black-20: rgba(0, 0, 0, 0.2);
 
+  --color-white-85: rgba(244, 244, 244, 0.85);
   --color-white-80: rgba(244, 244, 244, 0.8);
   --color-white-78: rgba(244, 244, 244, 0.78);
   --color-white-75: rgba(244, 244, 244, 0.75);

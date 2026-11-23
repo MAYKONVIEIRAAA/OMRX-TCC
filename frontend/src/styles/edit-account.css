@@ -2,20 +2,8 @@
    Minha conta - Editar dados da conta
    - Desktop (> 1024px): Figma 1440px
    - Mobile/tablet (<= 1024px): Figma 390px
-   Reaproveita .account, .account__header e .account-card de account.css
+   Reaproveita .account, .account-back, .account__header e .account-card de account.css
    ========================================================================== */
-
-.account-back {
-  align-self: flex-start;
-  font-weight: 600;
-  font-size: 14px;
-  color: var(--color-sky);
-}
-
-.account-back:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
 
 /* --------------------------------------------------------------------------
    Cartao do formulario

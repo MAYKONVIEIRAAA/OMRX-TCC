@@ -40,6 +40,11 @@ export const EDIT_ACCOUNT_MESSAGES = {
   unexpectedError: "Não foi possível salvar as alterações. Tente novamente.",
 };
 
+export const DELETE_ACCOUNT_MESSAGES = {
+  submitting: "Excluindo...",
+  unexpectedError: "Não foi possível excluir sua conta. Tente novamente.",
+};
+
 export const VERIFY_EMAIL_MESSAGES = {
   invalidLink: "Link de verificação inválido ou já utilizado.",
   unexpectedError: "Não foi possível confirmar seu e-mail. Tente novamente.",

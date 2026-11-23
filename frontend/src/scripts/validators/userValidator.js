@@ -35,6 +35,16 @@ function getCurrentPasswordError({ password }) {
   return null;
 }
 
+function getDeletionPasswordError({ currentPassword }) {
+  if (!currentPassword) return "Informe sua senha atual.";
+  return null;
+}
+
+function getDeletionConfirmationError({ confirmDeletion }) {
+  if (!confirmDeletion) return "Confirme que entende que seus dados serão apagados.";
+  return null;
+}
+
 export const registerValidator = createValidator({
   name: getNameError,
   email: getEmailError,
@@ -45,6 +55,11 @@ export const registerValidator = createValidator({
 export const loginValidator = createValidator({
   email: getEmailError,
   password: getCurrentPasswordError,
+});
+
+export const deleteAccountValidator = createValidator({
+  currentPassword: getDeletionPasswordError,
+  confirmDeletion: getDeletionConfirmationError,
 });
 
 export const normalizeEmail = (email) => email.trim().toLowerCase();

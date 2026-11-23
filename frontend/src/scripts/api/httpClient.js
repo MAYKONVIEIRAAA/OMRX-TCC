@@ -60,6 +60,10 @@ export function putJson(path, requestBody, headers = {}) {
   return sendJson("PUT", path, requestBody, headers);
 }
 
+export function deleteJson(path, requestBody, headers = {}) {
+  return sendJson("DELETE", path, requestBody, headers);
+}
+
 export function getErrorMessage(error, fallbackMessage) {
   return error instanceof ApiError ? error.message : fallbackMessage;
 }

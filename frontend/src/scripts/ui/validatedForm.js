@@ -6,6 +6,10 @@ function isMarkedInvalid(input) {
   return input.getAttribute("aria-invalid") === "true";
 }
 
+function readFieldValue(input) {
+  return input.type === "checkbox" ? input.checked : input.value;
+}
+
 export function initValidatedForm({
   form,
   validator,
@@ -19,7 +23,7 @@ export function initValidatedForm({
 
   function readFormValues() {
     return Object.fromEntries(
-      validator.fieldNames.map((fieldName) => [fieldName, form.elements[fieldName].value])
+      validator.fieldNames.map((fieldName) => [fieldName, readFieldValue(form.elements[fieldName])])
     );
   }
 
