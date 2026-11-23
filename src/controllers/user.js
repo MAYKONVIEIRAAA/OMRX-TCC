@@ -67,6 +67,67 @@ async function login(req, resp) {
     return resp.status(200).json({ token });
 }
 
+async function update(req, resp) {
+    const id = req.auth.id;
+    const { name, email, newPassword } = req.body;
+    const fields = {};
+    let emailChanged = false;
+    let currentUser = null;
+
+    if (name) {
+        fields.name = name.trim();
+    }
+
+    if (email) {
+        const normalizedEmail = email.trim().toLowerCase();
+        const existing = await userModel.findByEmail(normalizedEmail);
+
+        if (existing && existing.user_id !== id) {
+            return resp.status(409).json({ error: "Esse email já está em uso por outra conta." });
+        }
+
+        currentUser = await userModel.findById(id);
+        emailChanged = currentUser.user_email !== normalizedEmail;
+        fields.email = normalizedEmail;
+    }
+
+    if (newPassword) {
+        fields.passwordHash = await bcrypt.hash(newPassword, 10);
+    }
+
+    await userModel.update(id, fields, emailChanged);
+
+    const response = { id };
+
+    if (emailChanged) {
+        let emailSent = true;
+
+        try {
+            await emailVerificationService.sendVerificationEmail({
+                id,
+                name: fields.name ?? currentUser.user_name,
+                email: fields.email,
+            });
+        } catch (error) {
+            console.error("Falha ao enviar e-mail de verificacao:", error.message);
+            emailSent = false;
+        }
+
+        response.emailSent = emailSent;
+    }
+
+    return resp.status(200).json(response);
+}
+
+async function remove(req, resp) {
+    try {
+        await userModel.remove(req.auth.id);
+        return resp.status(204).send();
+    } catch (error) {
+        return resp.status(500).json({ error: "Nao foi possivel excluir sua conta. Tente novamente mais tarde." });
+    }
+}
+
 async function verifyEmail(req, resp) {
     try {
         await emailVerificationService.verifyEmail(req.body?.token);
@@ -95,4 +156,18 @@ async function resendVerification(req, resp) {
     return resp.status(200).json({ message: EMAIL_VERIFICATION_MESSAGES.RESEND_ACCEPTED });
 }
 
-module.exports = { create, login, verifyEmail, resendVerification }
+async function getAccount(req, resp) {
+    const user = await userModel.findById(req.auth.id);
+
+    if (!user) {
+        return resp.status(404).json({ error: "Conta não encontrada." });
+    }
+
+    return resp.status(200).json({
+        name: user.user_name,
+        email: user.user_email,
+        createdAt: user.user_created_at,
+    });
+}
+
+module.exports = { create, login, update, remove, verifyEmail, resendVerification, getAccount }
