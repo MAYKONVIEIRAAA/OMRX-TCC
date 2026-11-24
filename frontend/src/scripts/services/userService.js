@@ -1,4 +1,4 @@
-import { getJson, postJson } from "../api/httpClient.js";
+import { deleteJson, getJson, postJson, putJson } from "../api/httpClient.js";
 
 const TOKEN_STORAGE_KEY = "omrx:token";
 
@@ -56,4 +56,12 @@ function getAuthHeaders() {
 
 export function getAccount() {
   return getJson("/account", getAuthHeaders());
+}
+
+export function updateAccount(changes) {
+  return putJson("/change", changes, getAuthHeaders());
+}
+
+export function deleteAccount({ currentPassword, confirmDeletion }) {
+  return deleteJson("/delete", { currentPassword, confirmDeletion }, getAuthHeaders());
 }
