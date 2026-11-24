@@ -107,6 +107,42 @@
 }
 
 /* --------------------------------------------------------------------------
+   Botao de acao destrutiva (ex.: excluir conta)
+   -------------------------------------------------------------------------- */
+.button-danger {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 24px;
+  background-color: var(--color-danger);
+  border: none;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 1.2;
+  color: var(--color-pure-white);
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    filter 0.15s ease,
+    opacity 0.15s ease;
+}
+
+.button-danger:hover:not(:disabled) {
+  filter: brightness(1.08);
+}
+
+.button-danger:focus-visible {
+  outline: 2px solid var(--color-sky);
+  outline-offset: 2px;
+}
+
+.button-danger:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+/* --------------------------------------------------------------------------
    Botoes secundarios
    - secondary: contorno claro, para fundos escuros
    - navy / outline-navy: para fundos claros
