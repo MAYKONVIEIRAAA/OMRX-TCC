@@ -40,16 +40,28 @@ async function sendRequest(path, options) {
   return responseBody;
 }
 
-export function getJson(path) {
-  return sendRequest(path, { method: "GET" });
+export function getJson(path, headers = {}) {
+  return sendRequest(path, { method: "GET", headers });
+}
+
+function sendJson(method, path, requestBody, headers = {}) {
+  return sendRequest(path, {
+    method,
+    headers: { "Content-Type": "application/json", ...headers },
+    body: JSON.stringify(requestBody),
+  });
 }
 
 export function postJson(path, requestBody) {
-  return sendRequest(path, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(requestBody),
-  });
+  return sendJson("POST", path, requestBody);
+}
+
+export function putJson(path, requestBody, headers = {}) {
+  return sendJson("PUT", path, requestBody, headers);
+}
+
+export function deleteJson(path, requestBody, headers = {}) {
+  return sendJson("DELETE", path, requestBody, headers);
 }
 
 export function getErrorMessage(error, fallbackMessage) {
