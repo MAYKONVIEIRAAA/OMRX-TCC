@@ -1,12 +1,13 @@
 // Banco em memoria que imita o subconjunto de SQL usado pelos models
-// (src/models/user.js, src/models/emailVerificationToken.js e src/models/verification.js).
+// (src/models/user.js, src/models/emailVerificationToken.js, src/models/passwordResetToken.js e src/models/verification.js).
 // A comparacao de email e case-insensitive, como a collation padrao do MySQL.
 
 function createFakeDb() {
-  const state = { users: [], tokens: [], verifications: [] };
+  const state = { users: [], tokens: [], verifications: [], passwordResetTokens: [] };
   let userSeq = 0;
   let tokenSeq = 0;
   let verificationSeq = 0;
+  let passwordResetTokenSeq = 0;
 
   const sameEmail = (a, b) => String(a).toLowerCase() === String(b).toLowerCase();
 
@@ -21,6 +22,7 @@ function createFakeDb() {
         user_email: email,
         senha_hash: hash,
         user_email_verified_at: null,
+        user_created_at: new Date(),
       };
       state.users.push(row);
       return [{ insertId: row.user_id }];
@@ -36,10 +38,33 @@ function createFakeDb() {
       return [user ? [{ ...user }] : []];
     }
 
+    if (q.startsWith("SELECT * FROM users WHERE user_id")) {
+      const user = state.users.find((u) => u.user_id === params[0]);
+      return [user ? [{ ...user }] : []];
+    }
+
+    if (q.startsWith("UPDATE users SET user_name = COALESCE")) {
+      const [name, email, passwordHash, resetVerification, id] = params;
+      const user = state.users.find((u) => u.user_id === id);
+      if (user) {
+        if (name !== null) user.user_name = name;
+        if (email !== null) user.user_email = email;
+        if (passwordHash !== null) user.senha_hash = passwordHash;
+        if (resetVerification) user.user_email_verified_at = null;
+      }
+      return [{ affectedRows: user ? 1 : 0 }];
+    }
+
     if (q.startsWith("UPDATE users SET user_email_verified_at")) {
       const user = state.users.find((u) => u.user_id === params[0]);
       if (user) user.user_email_verified_at = new Date();
       return [{ affectedRows: user ? 1 : 0 }];
+    }
+
+    if (q.startsWith("DELETE FROM users WHERE user_id")) {
+      const before = state.users.length;
+      state.users = state.users.filter((u) => u.user_id !== params[0]);
+      return [{ affectedRows: before - state.users.length }];
     }
 
     if (q.startsWith("INSERT INTO email_verification_tokens")) {
@@ -53,6 +78,15 @@ function createFakeDb() {
         expires_at: new Date(now + hours * 3600 * 1000),
       });
       return [{ insertId: tokenSeq }];
+    }
+
+    if (q.startsWith("SELECT user_id, expires_at < NOW() AS expired FROM password_reset_tokens")) {
+      const token = state.passwordResetTokens.find((t) => t.token_hash === params[0]);
+      return [
+        token
+          ? [{ user_id: token.user_id, expired: token.expires_at < new Date() ? 1 : 0 }]
+          : [],
+      ];
     }
 
     if (q.startsWith("SELECT user_id, expires_at < NOW()")) {
@@ -82,6 +116,25 @@ function createFakeDb() {
       const before = state.tokens.length;
       state.tokens = state.tokens.filter((t) => t.user_id !== params[0]);
       return [{ affectedRows: before - state.tokens.length }];
+    }
+
+    if (q.startsWith("INSERT INTO password_reset_tokens")) {
+      const [userId, tokenHash, hours] = params;
+      const now = Date.now();
+      state.passwordResetTokens.push({
+        id: ++passwordResetTokenSeq,
+        user_id: userId,
+        token_hash: tokenHash,
+        created_at: new Date(now),
+        expires_at: new Date(now + hours * 3600 * 1000),
+      });
+      return [{ insertId: passwordResetTokenSeq }];
+    }
+
+    if (q.startsWith("DELETE FROM password_reset_tokens")) {
+      const before = state.passwordResetTokens.length;
+      state.passwordResetTokens = state.passwordResetTokens.filter((t) => t.user_id !== params[0]);
+      return [{ affectedRows: before - state.passwordResetTokens.length }];
     }
 
     if (q.startsWith("INSERT INTO verifications")) {
@@ -116,17 +169,22 @@ function createFakeDb() {
       state.users = [];
       state.tokens = [];
       state.verifications = [];
+      state.passwordResetTokens = [];
       userSeq = 0;
       tokenSeq = 0;
       verificationSeq = 0;
+      passwordResetTokenSeq = 0;
     },
 
     // --- helpers de inspecao e manipulacao usados pelos testes ---
     users: () => state.users,
     tokens: () => state.tokens,
     verifications: () => state.verifications,
+    passwordResetTokens: () => state.passwordResetTokens,
     findUser: (email) => state.users.find((u) => sameEmail(u.user_email, email)),
     tokensOf: (userId) => state.tokens.filter((t) => t.user_id === userId),
+    passwordResetTokensOf: (userId) =>
+      state.passwordResetTokens.filter((t) => t.user_id === userId),
 
     verifyUser(email) {
       this.findUser(email).user_email_verified_at = new Date();
@@ -141,6 +199,12 @@ function createFakeDb() {
 
     expireTokens(userId) {
       for (const t of this.tokensOf(userId)) {
+        t.expires_at = new Date(Date.now() - 1000);
+      }
+    },
+
+    expirePasswordResetTokens(userId) {
+      for (const t of this.passwordResetTokensOf(userId)) {
         t.expires_at = new Date(Date.now() - 1000);
       }
     },
