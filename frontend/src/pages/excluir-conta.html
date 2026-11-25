@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Excluir conta | OMRX</title>
+
+    <link rel="icon" type="image/png" href="/assets/images/logo-omrx.png" />
+    <link rel="stylesheet" href="/styles/main.css" />
+    <link rel="stylesheet" href="/styles/components/header.css" />
+    <link rel="stylesheet" href="/styles/components/footer.css" />
+    <link rel="stylesheet" href="/styles/components.css" />
+    <link rel="stylesheet" href="/styles/account.css" />
+    <link rel="stylesheet" href="/styles/delete-account.css" />
+    <script type="module" src="/scripts/components/omrx-header.js"></script>
+    <script type="module" src="/scripts/components/omrx-footer.js"></script>
+    <script type="module" src="/scripts/pages/excluir-conta.js"></script>
+  </head>
+  <body>
+    <omrx-header></omrx-header>
+
+    <main class="account account--delete">
+      <div class="account__inner">
+        <a class="account-back" href="/pages/minha-conta.html">
+          <span aria-hidden="true">←</span> Voltar para Minha conta
+        </a>
+
+        <header class="account__header">
+          <p class="account__eyebrow">Excluir conta</p>
+          <h1 class="account__title">Excluir conta</h1>
+          <p class="account__subtitle">
+            Essa ação é permanente. Confira o que será apagado antes de continuar.
+          </p>
+        </header>
+
+        <form class="account-card delete-account" id="delete-account-form" novalidate>
+          <fieldset class="delete-account__fieldset" id="delete-account-fields">
+            <div class="delete-account__body">
+              <section class="delete-account__group" aria-labelledby="dados-apagados-titulo">
+                <h2 class="delete-account__group-title" id="dados-apagados-titulo">
+                  O que será apagado
+                </h2>
+
+                <ul class="delete-account__list">
+                  <li class="delete-account__item">Seus dados de acesso</li>
+                  <li class="delete-account__item">
+                    Todas as preferências e configurações da conta
+                  </li>
+                </ul>
+
+                <div class="delete-account__warning">
+                  <p class="delete-account__warning-title">Atenção</p>
+                  <p class="delete-account__warning-text">
+                    Essa ação não pode ser desfeita. Depois de excluída, não é possível recuperar a
+                    conta.
+                  </p>
+                </div>
+              </section>
+
+              <div class="delete-account__divider" aria-hidden="true"></div>
+
+              <section class="delete-account__group" aria-labelledby="confirmar-exclusao-titulo">
+                <h2 class="delete-account__group-title" id="confirmar-exclusao-titulo">
+                  Confirmar exclusão
+                </h2>
+
+                <div class="form-field">
+                  <label class="form-field__label" for="current-password">Senha atual</label>
+                  <input
+                    class="form-field__input"
+                    id="current-password"
+                    name="currentPassword"
+                    type="password"
+                    placeholder="Digite sua senha atual"
+                    autocomplete="current-password"
+                    aria-describedby="current-password-error"
+                    required
+                  />
+                  <p class="form-field__error" id="current-password-error" aria-live="polite"></p>
+                </div>
+
+                <div class="form-field">
+                  <label class="delete-account__confirm" for="confirm-deletion">
+                    <input
+                      class="delete-account__checkbox"
+                      id="confirm-deletion"
+                      name="confirmDeletion"
+                      type="checkbox"
+                      aria-describedby="confirm-deletion-error"
+                      required
+                    />
+                    <span>
+                      <span aria-hidden="true">*</span>
+                      Entendo que meus dados serão apagados permanentemente.
+                    </span>
+                  </label>
+                  <p class="form-field__error" id="confirm-deletion-error" aria-live="polite"></p>
+                </div>
+              </section>
+            </div>
+
+            <div class="delete-account__actions">
+              <p class="form-status delete-account__status" id="form-status" role="status"></p>
+              <p class="delete-account__note" id="delete-account-note">
+                O botão é liberado depois da confirmação.
+              </p>
+              <a class="button-secondary delete-account__cancel" href="/pages/minha-conta.html">
+                Cancelar
+              </a>
+              <!-- Liberado pelo script quando a caixa de confirmacao e marcada -->
+              <button
+                class="button-danger delete-account__submit"
+                type="submit"
+                aria-describedby="delete-account-note"
+                disabled
+              >
+                Excluir minha conta
+              </button>
+            </div>
+          </fieldset>
+        </form>
+      </div>
+    </main>
+
+    <omrx-footer></omrx-footer>
+  </body>
+</html>
