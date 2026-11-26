@@ -6,8 +6,7 @@ async function forgot(req, resp) {
 
   try {
     await passwordResetService.requestPasswordReset(email);
-  } catch (error) {
-    console.error("Falha ao enviar e-mail de redefinicao de senha:", error.message);
+  } catch {
     return resp.status(502).json({ error: PASSWORD_RESET_MESSAGES.SEND_FAILED });
   }
 
