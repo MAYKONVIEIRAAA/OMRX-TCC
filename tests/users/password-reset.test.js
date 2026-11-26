@@ -59,17 +59,27 @@ describe("POST /forgot-password — solicitacao de redefinicao de senha", () => 
   });
 
   it("Deve responder 400 quando o email nao e enviado", async () => {
-    expectResponse(await forgot({}), { status: 400, body: { error: "Email inválido." } });
+    expectResponse(await forgot({}), { status: 400, body: { error: "Informe o e-mail." } });
   });
 
   it("Deve responder 400 quando o email esta vazio", async () => {
-    expectResponse(await forgot({ email: "" }), { status: 400, body: { error: "Email inválido." } });
+    expectResponse(await forgot({ email: "" }), {
+      status: 400,
+      body: { error: "Informe o e-mail." },
+    });
+  });
+
+  it("Deve responder 400 quando o email so tem espacos", async () => {
+    expectResponse(await forgot({ email: "   " }), {
+      status: 400,
+      body: { error: "Informe o e-mail." },
+    });
   });
 
   it("Deve responder 400 quando o email nao tem formato de email", async () => {
     expectResponse(await forgot({ email: "naoeemail" }), {
       status: 400,
-      body: { error: "Email inválido." },
+      body: { error: "Formato de e-mail inválido." },
     });
   });
 });
