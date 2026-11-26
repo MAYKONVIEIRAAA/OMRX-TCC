@@ -50,20 +50,20 @@ async function resetPassword(token, newPassword) {
     throw new PasswordResetError("INVALID_TOKEN");
   }
 
-  const record = await passwordResetModel.findByHash(hashToken(token));
+  const storedResetToken = await passwordResetModel.findByHash(hashToken(token));
 
-  if (!record) {
+  if (!storedResetToken) {
     throw new PasswordResetError("INVALID_TOKEN");
   }
 
-  if (record.expired) {
+  if (storedResetToken.expired) {
     throw new PasswordResetError("EXPIRED_TOKEN");
   }
 
   const passwordHash = await bcrypt.hash(newPassword, 10);
 
-  await userModel.update(record.user_id, { passwordHash }, false);
-  await passwordResetModel.deleteByUserId(record.user_id);
+  await userModel.update(storedResetToken.user_id, { passwordHash }, false);
+  await passwordResetModel.deleteByUserId(storedResetToken.user_id);
 }
 
 module.exports = {
