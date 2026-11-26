@@ -1,7 +1,7 @@
 const bcrypt = require("bcryptjs");
 const { PASSWORD_RESET } = require("../config/config");
 const userModel = require("../models/user");
-const tokenModel = require("../models/passwordResetToken");
+const passwordResetModel = require("../models/passwordResetToken");
 const { sendMail } = require("../providers/mailProvider");
 const { buildPasswordResetEmail } = require("../templates/passwordResetEmail");
 const { generateToken, hashToken } = require("../utils/token");
@@ -29,8 +29,8 @@ async function requestPasswordReset(email) {
 
   const { token, tokenHash } = generateToken(PASSWORD_RESET.TOKEN_BYTES);
 
-  await tokenModel.deleteByUserId(user.user_id);
-  await tokenModel.create({
+  await passwordResetModel.deleteByUserId(user.user_id);
+  await passwordResetModel.create({
     userId: user.user_id,
     tokenHash,
     expiresInHours: PASSWORD_RESET.EXPIRES_IN_HOURS,
@@ -50,7 +50,7 @@ async function resetPassword(token, newPassword) {
     throw new PasswordResetError("INVALID_TOKEN");
   }
 
-  const record = await tokenModel.findByHash(hashToken(token));
+  const record = await passwordResetModel.findByHash(hashToken(token));
 
   if (!record) {
     throw new PasswordResetError("INVALID_TOKEN");
@@ -63,7 +63,7 @@ async function resetPassword(token, newPassword) {
   const passwordHash = await bcrypt.hash(newPassword, 10);
 
   await userModel.update(record.user_id, { passwordHash }, false);
-  await tokenModel.deleteByUserId(record.user_id);
+  await passwordResetModel.deleteByUserId(record.user_id);
 }
 
 module.exports = {
