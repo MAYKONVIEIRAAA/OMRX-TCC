@@ -14,6 +14,8 @@ export const PAGES = {
   resetPassword: "/pages/redefinir-senha.html",
   passwordUpdated: "/pages/senha-atualizada.html",
   account: "/pages/minha-conta.html",
+  editAccount: "/pages/editar-conta.html",
+  deleteAccount: "/pages/excluir-conta.html",
   privacy: "/pages/privacidade.html",
   terms: "/pages/termos-de-uso.html",
   contact: "/pages/contato.html",

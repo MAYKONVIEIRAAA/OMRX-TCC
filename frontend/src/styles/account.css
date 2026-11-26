@@ -1,0 +1,272 @@
+/* ==========================================================================
+   Minha conta - Dados da conta
+   - Desktop (> 1024px): Figma 1440px
+   - Mobile/tablet (<= 1024px): Figma 390px
+   ========================================================================== */
+
+.account {
+  padding: 64px var(--page-gutter) 80px;
+}
+
+.account__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  max-width: var(--content-max-width);
+  margin-inline: auto;
+}
+
+/* Link "Voltar para Minha conta" das telas internas da conta */
+.account-back {
+  align-self: flex-start;
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--color-sky);
+}
+
+.account-back:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   Cabecalho
+   -------------------------------------------------------------------------- */
+.account__header {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.account__eyebrow {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-orange);
+}
+
+.account__eyebrow::before {
+  content: "// ";
+  content: "// " / "";
+}
+
+.account__title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 44px;
+  color: var(--color-white);
+}
+
+.account__subtitle {
+  font-size: 17px;
+  color: var(--color-white-78);
+}
+
+.account__status {
+  text-align: left;
+}
+
+.account__section {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.account__section-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 24px;
+  color: var(--color-white);
+}
+
+/* --------------------------------------------------------------------------
+   Cartao base das tabelas
+   -------------------------------------------------------------------------- */
+.account-card {
+  background-color: var(--color-navy-dark);
+  border: 1.5px solid var(--color-indigo);
+  border-radius: 18px;
+  overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   Tabela de dados
+   -------------------------------------------------------------------------- */
+.account-data__head,
+.account-data__row {
+  display: grid;
+  grid-template-columns: 240px minmax(0, 1fr) 150px;
+  grid-template-areas: "label value action";
+  align-items: center;
+  column-gap: 24px;
+  border-bottom: 1px solid var(--color-indigo);
+}
+
+.account-data__head {
+  padding: 16px 28px;
+}
+
+.account-data__row {
+  padding: 20px 28px;
+}
+
+.account-data__row:last-child {
+  border-bottom: none;
+}
+
+.account-data__head,
+.account-data__label {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-sky-60);
+}
+
+.account-data__label {
+  grid-area: label;
+}
+
+.account-data__value {
+  grid-area: value;
+  font-weight: 500;
+  font-size: 16px;
+  color: var(--color-white);
+  overflow-wrap: anywhere;
+}
+
+.account-data[aria-busy="true"] .account-data__value {
+  color: var(--color-white-55);
+}
+
+.account-data__action {
+  grid-area: action;
+  justify-self: end;
+}
+
+.account-data__link {
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--color-sky);
+}
+
+.account-data__link:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   Excluir conta
+   -------------------------------------------------------------------------- */
+.account-danger {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 22px 28px;
+}
+
+.account-danger__info {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.account-danger__title {
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--color-danger);
+}
+
+.account-danger__text {
+  font-size: 14px;
+  color: var(--color-white-70);
+}
+
+.account-danger__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 170px;
+  height: 44px;
+  padding: 0 22px;
+  border: 1.5px solid var(--color-danger);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 14px;
+  color: var(--color-danger);
+  white-space: nowrap;
+  transition: background-color 0.15s ease;
+}
+
+.account-danger__button:hover {
+  background-color: var(--color-danger-12);
+}
+
+/* ==========================================================================
+   Mobile/tablet
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .account {
+    padding: 32px var(--page-gutter) 40px;
+  }
+
+  .account__inner,
+  .account__section {
+    gap: 20px;
+  }
+
+  .account__header {
+    gap: 10px;
+  }
+
+  .account__title {
+    font-size: 34px;
+  }
+
+  .account__subtitle {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .account__section-title {
+    font-size: 22px;
+  }
+
+  .account-card {
+    border-radius: 16px;
+  }
+
+  /* No mobile o rotulo fica acima do valor e a acao a direita */
+  .account-data__head {
+    display: none;
+  }
+
+  .account-data__row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "label action"
+      "value action";
+    column-gap: 12px;
+    row-gap: 4px;
+    padding: 14px 16px;
+  }
+
+  .account-danger {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .account-danger__text {
+    line-height: 20px;
+  }
+
+  .account-danger__button {
+    height: 46px;
+  }
+}

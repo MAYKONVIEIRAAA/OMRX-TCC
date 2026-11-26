@@ -1,4 +1,4 @@
-import { postJson } from "../api/httpClient.js";
+import { deleteJson, getJson, postJson, putJson } from "../api/httpClient.js";
 
 const TOKEN_STORAGE_KEY = "omrx:token";
 
@@ -34,14 +34,34 @@ function hasTokenExpired(token) {
   }
 }
 
+export function clearSession() {
+  localStorage.removeItem(TOKEN_STORAGE_KEY);
+}
+
 export function isLoggedIn() {
   const token = localStorage.getItem(TOKEN_STORAGE_KEY);
   if (!token) return false;
 
   if (hasTokenExpired(token)) {
-    localStorage.removeItem(TOKEN_STORAGE_KEY);
+    clearSession();
     return false;
   }
 
   return true;
+}
+
+function getAuthHeaders() {
+  return { Authorization: `Bearer ${localStorage.getItem(TOKEN_STORAGE_KEY)}` };
+}
+
+export function getAccount() {
+  return getJson("/account", getAuthHeaders());
+}
+
+export function updateAccount(changes) {
+  return putJson("/change", changes, getAuthHeaders());
+}
+
+export function deleteAccount({ currentPassword, confirmDeletion }) {
+  return deleteJson("/delete", { currentPassword, confirmDeletion }, getAuthHeaders());
 }

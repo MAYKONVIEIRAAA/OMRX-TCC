@@ -26,6 +26,25 @@ export const RESEND_EMAIL_MESSAGES = {
   unexpectedError: "Não foi possível reenviar o e-mail. Tente novamente.",
 };
 
+export const ACCOUNT_MESSAGES = {
+  unexpectedError: "Não foi possível carregar os dados da sua conta. Tente novamente.",
+};
+
+export const EDIT_ACCOUNT_MESSAGES = {
+  submitting: "Salvando...",
+  noChanges: "Nenhuma alteração para salvar.",
+  saved: "Dados atualizados com sucesso.",
+  savedEmailSent: "Dados atualizados. Enviamos um link de confirmação para o novo e-mail.",
+  savedEmailNotSent:
+    "Dados atualizados, mas não foi possível enviar o link de confirmação para o novo e-mail.",
+  unexpectedError: "Não foi possível salvar as alterações. Tente novamente.",
+};
+
+export const DELETE_ACCOUNT_MESSAGES = {
+  submitting: "Excluindo...",
+  unexpectedError: "Não foi possível excluir sua conta. Tente novamente.",
+};
+
 export const VERIFY_EMAIL_MESSAGES = {
   invalidLink: "Link de verificação inválido ou já utilizado.",
   unexpectedError: "Não foi possível confirmar seu e-mail. Tente novamente.",

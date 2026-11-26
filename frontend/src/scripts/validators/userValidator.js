@@ -35,6 +35,16 @@ function getCurrentPasswordError({ password }) {
   return null;
 }
 
+function getDeletionPasswordError({ currentPassword }) {
+  if (!currentPassword) return "Informe sua senha atual.";
+  return null;
+}
+
+function getDeletionConfirmationError({ confirmDeletion }) {
+  if (!confirmDeletion) return "Confirme que entende que seus dados serão apagados.";
+  return null;
+}
+
 export const registerValidator = createValidator({
   name: getNameError,
   email: getEmailError,
@@ -46,3 +56,47 @@ export const loginValidator = createValidator({
   email: getEmailError,
   password: getCurrentPasswordError,
 });
+
+export const deleteAccountValidator = createValidator({
+  currentPassword: getDeletionPasswordError,
+  confirmDeletion: getDeletionConfirmationError,
+});
+
+export const normalizeEmail = (email) => email.trim().toLowerCase();
+
+const isChangingPassword = ({ newPassword, confirmNewPassword }) =>
+  Boolean(newPassword || confirmNewPassword);
+
+function getOptionalNewPasswordError({ newPassword, confirmNewPassword }) {
+  if (!newPassword) return confirmNewPassword ? "Informe a nova senha." : null;
+  if (newPassword.length < MIN_PASSWORD_LENGTH) {
+    return `A nova senha deve ter ao menos ${MIN_PASSWORD_LENGTH} caracteres.`;
+  }
+  return null;
+}
+
+function getNewPasswordConfirmationError({ newPassword, confirmNewPassword }) {
+  if (!newPassword) return null;
+  if (!confirmNewPassword) return "Confirme a nova senha.";
+  if (confirmNewPassword !== newPassword) return "As senhas não coincidem.";
+  return null;
+}
+
+export function createEditAccountValidator(getSavedEmail) {
+  function getRequiredCurrentPasswordError(formValues) {
+    if (formValues.currentPassword) return null;
+
+    const isChangingEmail = normalizeEmail(formValues.email) !== getSavedEmail();
+    if (isChangingEmail || isChangingPassword(formValues)) return "Informe sua senha atual.";
+
+    return null;
+  }
+
+  return createValidator({
+    name: getNameError,
+    email: getEmailError,
+    currentPassword: getRequiredCurrentPasswordError,
+    newPassword: getOptionalNewPasswordError,
+    confirmNewPassword: getNewPasswordConfirmationError,
+  });
+}
